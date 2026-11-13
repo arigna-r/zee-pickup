@@ -192,10 +192,11 @@ function render(){
     L.innerHTML='<div class="empty"><div class="cat">'+cat(false)+'</div>Zee 今天還沒傳答案過來～<br>有新的會自動出現在這裡。</div>';
   }
   var hist=[];
-  items.forEach(function(it){hist.push({t:it.time,html:'<span class="t">'+when(it.time)+'・Zee</span><div class="m">'+esc(it.message||'')+'</div>'})});
+  var shownId=(top&&sameDay(top.time,Date.now()))?top.id:null;
+  items.forEach(function(it){if(it.id===shownId)return;hist.push({t:it.time,html:'<span class="t">'+when(it.time)+'・Zee</span><div class="m">'+esc(it.message||'')+'</div>'})});
   A.sent.forEach(function(r){hist.push({t:r.time,html:'<span class="t">'+when(r.time)+'・你回覆</span><div class="m me">'+esc(r.text)+'</div>'})});
   hist.sort(function(a,b){return b.t-a.t});
-  var rest=hist.slice(top&&sameDay(top.time,Date.now())?1:0,30);
+  var rest=hist.slice(0,30);
   $('#histCard').hidden=!rest.length;
   $('#hist').innerHTML=rest.map(function(h){return '<li>'+h.html+'</li>'}).join('');
   var link=new URL('./',location.href).href+'#pair='+fmtCode(A.code);
