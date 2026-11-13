@@ -217,6 +217,19 @@ button{cursor:pointer;touch-action:manipulation}
 .fine{margin:14px 2px 0;font-size:13.5px;line-height:1.7;color:var(--ink-soft)}
 .fine.warn{color:#8E3E52}
 .after{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0 6px}
+.actions .btn-row{grid-template-columns:repeat(auto-fit,minmax(0,1fr))}
+.actions .btn-row .btn{font-size:15.5px;padding:0 10px}
+.btn:disabled{opacity:.65;cursor:default;transform:none}
+.send-card{margin:12px 0 0;padding:14px 16px;border-radius:var(--r-md);background:var(--card);box-shadow:var(--shadow);font-size:15px;line-height:1.65}
+.send-card b{display:block;font-size:16px;margin-bottom:2px}
+.send-card.ok{border-left:5px solid #8CC9A4}
+.send-card.wait{border-left:5px solid var(--lav)}
+.send-card.bad{border-left:5px solid var(--blush-deep)}
+.send-card .link-btn{margin-top:8px}
+.reply{margin:12px 0 0;padding:14px 16px;border-radius:20px 20px 20px 6px;background:var(--lav-soft);font-size:16px;line-height:1.6;animation:enter .4s var(--ease) both}
+.reply small{display:block;color:var(--lav-deep);font-size:13px;font-weight:600;margin-bottom:2px}
+.pair-err{min-height:1.4em;margin:6px 0 0;font-size:14px;color:#8E3E52}
+.sheet .field input{text-transform:uppercase;letter-spacing:.12em;font-family:var(--font-round);font-weight:700;text-align:center;font-size:20px}
 
 /* sheet / modal */
 .overlay{position:fixed;inset:0;z-index:50;background:rgba(74,58,63,.32);display:flex;align-items:flex-end;justify-content:center;animation:fade .25s ease both}
@@ -361,12 +374,17 @@ button{cursor:pointer;touch-action:manipulation}
     </details>
 
     <div class="actions">
-      <button class="btn primary" type="button" id="copyBtn">📋 複製給 Alex</button>
-      <button class="btn lav" type="button" id="shareBtn" hidden>💌 分享給 Alex</button>
+      <button class="btn primary" type="button" id="sendBtn">💌 直接傳給 Alex</button>
+      <div class="btn-row">
+        <button class="btn ghost" type="button" id="copyBtn">📋 複製給 Alex</button>
+        <button class="btn ghost" type="button" id="shareBtn" hidden>📤 分享給 Alex</button>
+      </div>
     </div>
+    <div class="send-card" id="sendCard" role="status" aria-live="polite" hidden></div>
+    <div class="reply" id="replyCard" aria-live="polite" hidden></div>
     <p class="status" id="status" role="status" aria-live="polite"></p>
-    <p class="fine warn" id="offlineSendNote" hidden>現在沒有網路：小卡和複製都能照常用，但要等連上網路，訊息才傳得出去喔。</p>
-    <p class="fine">小提醒：複製或打開分享選單，只是幫妳把訊息準備好；要在聊天 App 裡按下送出，Alex 才會收到喔。傳訊息需要網路～也可以直接截圖這張小卡傳給他。</p>
+    <p class="fine warn" id="offlineSendNote" hidden>現在沒有網路：小卡和複製都能照常用；按「直接傳給 Alex」會先排隊，連上網路後自動送出。</p>
+    <p class="fine">小提醒：「直接傳給 Alex」需要網路，送出後 Alex 打開他的收件匣就看得到。複製或分享則是把訊息交給聊天 App，要在那裡按下送出才算傳出去喔。</p>
     <div class="after">
       <button class="btn ghost" type="button" id="editAgain">✏️ 改一下</button>
       <button class="btn ghost" type="button" id="startOver">↺ 重新選擇</button>
@@ -382,15 +400,16 @@ button{cursor:pointer;touch-action:manipulation}
     <h2 id="about-title">關於這個小站 ♡</h2>
     <p>這是 Alex 做給 Zee 的小工具，讓妳下班前輕鬆告訴我要不要去接妳。</p>
     <h3>🔒 隱私</h3>
-    <p>妳的選擇只存在這支手機裡。不用帳號、沒有後台、不做任何追蹤，也不會用到定位。</p>
+    <p>妳的選擇存在這支手機裡。不用帳號、不做任何追蹤，也不會用到定位。</p>
+    <p>按「直接傳給 Alex」時，訊息會經過 ntfy.sh 這個免費的轉送服務送到 Alex 的收件匣（伺服器只保留約 12 小時），用的是只有你們知道的配對碼。</p>
     <h3>✈️ 沒網路的時候</h3>
-    <p>第一次在有網路時打開後，就算沒網路，也能打開、選擇、做小卡和複製。只有把訊息傳給 Alex 時需要網路。</p>
+    <p>第一次在有網路時打開後，就算沒網路，也能打開、選擇、做小卡和複製。傳給 Alex 需要網路；沒網路時按下傳送，會等連上線再自動送出。</p>
     <h3>☀️ 新的一天</h3>
     <p>每天會自動清空當天的選擇（像是下班時間），不會不小心用到昨天的。之前填過的地點會留著，方便下次點選。</p>
     <button class="btn ghost" type="button" id="clearToday">清空今天的選擇</button>
     <button class="btn ghost" type="button" id="clearPlaces">清除之前填過的地點</button>
     <button class="btn primary" type="button" data-close>知道了</button>
-    <p style="margin-top:14px;font-size:12px;text-align:center">版本 1.0</p>
+    <p style="margin-top:14px;font-size:12px;text-align:center">版本 1.1</p>
   </div>
 </div>
 
@@ -810,6 +829,7 @@ function renderSummary(){
   $('#shareBtn').hidden=!canShare();
   $('#status').textContent='';
   renderOnline();
+  if(window.__zeeLink)window.__zeeLink.render();
 }
 function buildSummaryOnce(){
   $('#msgEdit').addEventListener('input',function(){
@@ -902,8 +922,9 @@ if('serviceWorker' in navigator && (location.protocol==='https:'||location.hostn
     try{navigator.serviceWorker.register('sw.js').catch(function(){})}catch(e){}
   });
 }
-window.__zee={state:function(){return S},buildMsg:buildMsg,checkDay:checkDay};
+window.__zee={state:function(){return S},buildMsg:buildMsg,currentMsg:currentMsg,checkDay:checkDay,save:save,toast:toast,openOverlay:openOverlay,closeOverlay:closeOverlay};
 })();
 </script>
+<script src="link.js"></script>
 </body>
 </html>

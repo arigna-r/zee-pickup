@@ -1,10 +1,13 @@
 /* Zee 的下班接送站 — offline service worker
    Cache-first for the app shell, refreshed quietly in the background
    so a newer version shows up on the next launch. */
-const VERSION = 'zee-pickup-v1.0.0';
+const VERSION = 'zee-pickup-v1.1.0';
 const ASSETS = [
   './',
   './index.html',
+  './link.js',
+  './alex.html',
+  './alex.webmanifest',
   './manifest.webmanifest',
   './favicon.svg',
   './apple-touch-icon.png',
@@ -46,11 +49,13 @@ self.addEventListener('fetch', (event) => {
   if (url.origin !== self.location.origin) return; // the app never calls other sites
 
   if (req.mode === 'navigate') {
+    // alex.html is its own page; everything else in scope is Zee's app.
+    const page = /\/alex\.html$/.test(url.pathname) ? './alex.html' : './index.html';
     event.respondWith(
-      caches.match('./index.html').then((cached) => {
-        const net = refresh(req, './index.html').catch(() => null);
+      caches.match(page).then((cached) => {
+        const net = refresh(req, page).catch(() => null);
         if (cached) { event.waitUntil(net); return cached; }
-        return net.then((r) => r || caches.match('./'));
+        return net.then((r) => r || caches.match(page));
       })
     );
     return;

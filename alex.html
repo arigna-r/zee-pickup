@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Alex 的接送收件匣</title>
+<meta name="theme-color" content="#FFF8EF">
+<meta name="color-scheme" content="light">
+<meta name="format-detection" content="telephone=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="接送收件匣">
+<link rel="manifest" href="alex.webmanifest">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style>
+:root{--cream:#FFF8EF;--card:#FFFDF9;--blush:#F4B6C2;--blush-soft:#FCE6EA;--blush-deep:#DC7F94;--lav:#CDBDEB;--lav-soft:#EEE8F8;--lav-deep:#7E6BB8;--butter:#FBE7B5;
+  --ink:#4A3A3F;--ink-soft:#76656A;--line:#EEDFD3;--r-lg:26px;--r-md:20px;--r-sm:14px;
+  --shadow:0 1px 2px rgba(74,58,63,.06),0 8px 24px -10px rgba(122,88,96,.22);
+  --font:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif;
+  --font-round:ui-rounded,"SF Pro Rounded",-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC",system-ui,sans-serif;--ease:cubic-bezier(.22,.8,.3,1)}
+*{box-sizing:border-box}[hidden]{display:none!important}
+html{background:var(--cream);-webkit-text-size-adjust:100%}
+body{margin:0;color:var(--ink);font-family:var(--font);font-size:17px;line-height:1.6;-webkit-tap-highlight-color:transparent;
+  background:radial-gradient(120% 60% at 100% 0%,rgba(205,189,235,.30),transparent 60%),radial-gradient(90% 50% at 0% 100%,rgba(244,182,194,.28),transparent 60%),var(--cream);background-attachment:fixed;min-height:100dvh}
+button,input{font:inherit;color:inherit}button{cursor:pointer;touch-action:manipulation}
+:focus-visible{outline:3px solid var(--lav-deep);outline-offset:3px;border-radius:12px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+.app{max-width:520px;margin:0 auto;padding:calc(env(safe-area-inset-top) + 14px) calc(env(safe-area-inset-right) + 18px) calc(env(safe-area-inset-bottom) + 28px) calc(env(safe-area-inset-left) + 18px)}
+header{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+header .cat{width:54px;flex:none}header .cat svg{display:block;width:100%;height:auto}
+header h1{margin:0;font-size:22px;line-height:1.3}
+.pill{display:inline-flex;align-items:center;gap:6px;margin-top:3px;padding:2px 10px;border-radius:999px;background:rgba(255,253,249,.85);border:1px solid var(--line);font-size:13px;color:var(--ink-soft);font-family:var(--font-round)}
+.pill i{width:8px;height:8px;border-radius:50%;background:#8CC9A4;display:inline-block}
+.pill.off i{background:#C9B8C0}
+.card{background:var(--card);border-radius:var(--r-lg);box-shadow:var(--shadow);padding:18px;margin-bottom:14px}
+.card h2{margin:0 0 10px;font-size:18px}
+.latest{position:relative;overflow:hidden}
+.latest::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(140% 70% at 100% 0%,rgba(244,182,194,.30),transparent 55%)}
+.latest > *{position:relative}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:999px;font-size:14px;font-weight:700}
+.badge.pickup{background:var(--blush-soft);color:#8E3E52}.badge.self{background:var(--butter);color:#6E5520}.badge.later{background:var(--lav-soft);color:#4E3F86}
+.when{float:right;font-size:13px;color:var(--ink-soft);font-family:var(--font-round);margin-top:4px}
+.big{margin:10px 0 6px;font-size:22px;font-weight:800;line-height:1.4}
+.msg{margin:0;font-size:17px;line-height:1.75;white-space:pre-wrap;word-break:break-word;-webkit-user-select:text;user-select:text}
+.empty{text-align:center;color:var(--ink-soft);padding:12px 4px}
+.empty .cat{width:96px;margin:0 auto 6px}.empty .cat svg{width:100%;height:auto;display:block}
+.new{animation:pop .6s var(--ease)}
+@keyframes pop{0%{transform:scale(.97);opacity:.4}100%{transform:none;opacity:1}}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{min-height:44px;padding:0 14px;border-radius:999px;border:1.5px solid var(--line);background:#fff;font-size:15px;font-weight:600;text-align:left;transition:transform .15s var(--ease),background .2s}
+.chip:active{transform:scale(.96)}
+.row{display:flex;gap:8px;margin-top:10px}
+.row input{flex:1;min-width:0;min-height:50px;padding:10px 14px;border-radius:var(--r-sm);border:1.5px solid var(--line);background:#fff;font-size:17px}
+.row input:focus{outline:none;border-color:var(--lav-deep);box-shadow:0 0 0 4px rgba(205,189,235,.45)}
+.btn{min-height:50px;padding:0 18px;border-radius:999px;border:0;font-weight:700;font-size:16px;background:linear-gradient(180deg,#9A88D2,#7E6BB8);color:#fff;box-shadow:0 8px 18px -10px rgba(126,107,184,.9)}
+.btn.pink{background:linear-gradient(180deg,#E9919F,#D97A8F);box-shadow:0 8px 18px -10px rgba(217,122,143,.9)}
+.btn.ghost{background:#fff;color:var(--ink);border:1.5px solid var(--line);box-shadow:none;font-weight:600}
+.btn:disabled{opacity:.6}
+.status{margin:10px 0 0;font-size:14.5px;color:#4E3F86;min-height:0}
+.status:not(:empty){padding:10px 12px;border-radius:12px;background:var(--lav-soft)}
+.hist{list-style:none;margin:0;padding:0}
+.hist li{padding:10px 0;border-top:1px solid rgba(238,223,211,.8)}
+.hist li:first-child{border-top:0}
+.hist .t{font-size:13px;color:var(--ink-soft);font-family:var(--font-round)}
+.hist .m{font-size:15.5px;line-height:1.6;white-space:pre-wrap;word-break:break-word}
+.hist .me{color:var(--lav-deep)}
+details.card summary{list-style:none;cursor:pointer;font-weight:700;font-size:16.5px;min-height:28px}
+details.card summary::-webkit-details-marker{display:none}
+details.card summary::after{content:"＋";float:right;color:var(--ink-soft)}
+details.card[open] summary::after{content:"－"}
+details.card p,details.card ol{font-size:15px;color:var(--ink-soft);margin:10px 0 0}
+details.card ol{padding-left:20px}
+code.k{display:block;margin-top:8px;padding:10px 12px;border-radius:12px;background:var(--lav-soft);font-family:ui-monospace,Menlo,monospace;font-size:14px;word-break:break-all;color:#4E3F86;-webkit-user-select:all;user-select:all}
+.mini-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.mini-btns .btn{min-height:42px;font-size:14.5px}
+.fine{font-size:13px;color:var(--ink-soft);text-align:center;margin:6px 8px 0;line-height:1.7}
+.pair input{text-transform:uppercase;letter-spacing:.12em;text-align:center;font-weight:700;font-size:20px}
+.err{color:#8E3E52;font-size:14px;min-height:1.3em;margin:6px 0 0}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="cat" id="hdrCat" aria-hidden="true"></div>
+    <div>
+      <h1>Alex 的接送收件匣</h1>
+      <span class="pill" id="live"><i></i><span id="liveText">連線中…</span></span>
+    </div>
+  </header>
+
+  <section class="card pair" id="pairCard" hidden>
+    <h2>輸入配對碼 🔗</h2>
+    <p style="margin:0 0 6px;color:var(--ink-soft);font-size:15px">和 Zee 的 App 用同一組配對碼，她傳的答案就會出現在這裡。</p>
+    <div class="row"><label class="sr-only" for="pairInput">配對碼</label><input id="pairInput" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="12" placeholder="XXXX-XXXX"><button class="btn pink" id="pairOk" type="button">連結</button></div>
+    <p class="err" id="pairErr" role="alert"></p>
+  </section>
+
+  <main id="main" hidden>
+    <section class="card latest" id="latest" aria-live="polite"></section>
+
+    <section class="card" aria-labelledby="replyTitle">
+      <h2 id="replyTitle">回覆 Zee 💬</h2>
+      <div class="chips" id="quick"></div>
+      <div class="row"><label class="sr-only" for="replyInput">自己打一句</label><input id="replyInput" maxlength="120" placeholder="或自己打一句…" enterkeyhint="send"><button class="btn" id="replySend" type="button">傳給 Zee</button></div>
+      <p class="status" id="replyStatus" role="status" aria-live="polite"></p>
+    </section>
+
+    <section class="card" id="histCard" hidden>
+      <h2>最近的訊息</h2>
+      <ul class="hist" id="hist"></ul>
+    </section>
+
+    <details class="card">
+      <summary>📲 讓手機跳通知（選用）</summary>
+      <p>這頁打開時會自動更新。想在 Zee 傳來時手機直接跳通知，可以裝免費的 ntfy App，訂閱下面這個頻道名稱（等於密碼，不要外流）：</p>
+      <code class="k" id="topicName"></code>
+      <div class="mini-btns"><button class="btn ghost" type="button" data-copy="topic">複製頻道名稱</button><a class="btn ghost" id="ntfyLink" style="display:inline-flex;align-items:center;text-decoration:none" href="#">Android：直接訂閱</a></div>
+      <ol>
+        <li>iPhone 在 App Store、Android 在 Google Play 搜尋「ntfy」並安裝。</li>
+        <li>打開 App，按「＋」，貼上頻道名稱，伺服器維持預設的 ntfy.sh，按訂閱。</li>
+        <li>允許通知。之後 Zee 一傳，你的手機就會跳出她的答案。</li>
+      </ol>
+    </details>
+
+    <details class="card">
+      <summary>🔗 給 Zee 的連結和配對碼</summary>
+      <p>傳這個連結給 Zee，用 Safari 打開就會自動配對。如果她從主畫面打開時要求輸入配對碼，就輸入下面這組：</p>
+      <code class="k" id="zeeLink"></code>
+      <code class="k" id="codeShow"></code>
+      <div class="mini-btns"><button class="btn ghost" type="button" data-copy="link">複製連結</button><button class="btn ghost" type="button" data-copy="code">複製配對碼</button><button class="btn ghost" type="button" id="unpair">換一組配對碼</button></div>
+    </details>
+
+    <p class="fine">Zee 的答案透過 ntfy.sh 免費轉送，伺服器只保留約 12 小時；收到的訊息會另外存在這台裝置上。<br>這頁只顯示「已送到收件匣」的內容，不會知道 Zee 有沒有看到你的回覆。</p>
+  </main>
+</div>
+
+<script>
+(function(){
+'use strict';
+var NTFY='https://ntfy.sh', KEY='zee-pickup:alex:v1', ALPH='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+var $=function(s){return document.querySelector(s)};
+var esc=function(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
+var pad=function(n){return String(n).padStart(2,'0')};
+function norm(c){c=String(c||'').toUpperCase().replace(/[^A-Z0-9]/g,'');if(c.length!==8)return null;for(var i=0;i<8;i++)if(ALPH.indexOf(c[i])<0)return null;return c}
+function fmtCode(c){return c.slice(0,4)+'-'+c.slice(4)}
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return {}}}
+var A=Object.assign({code:null,items:[],sent:[]},load());
+function save(){try{localStorage.setItem(KEY,JSON.stringify(A))}catch(e){}}
+var T=null;
+async function topics(code){var d=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('zee-pickup|'+code));
+  var h=Array.prototype.map.call(new Uint8Array(d),function(x){return x.toString(16).padStart(2,'0')}).join('');return {ans:'zp_'+h.slice(0,28),rep:'zp_'+h.slice(28,56)}}
+
+var INK='#4A3A3F';
+function cat(happy){return '<svg viewBox="0 0 140 132" xmlns="http://www.w3.org/2000/svg">'+
+  '<path d="M100 112 C128 114 132 88 118 78" fill="none" stroke="'+INK+'" stroke-width="12" stroke-linecap="round"/><path d="M100 112 C128 114 132 88 118 78" fill="none" stroke="#FFFDF8" stroke-width="6.5" stroke-linecap="round"/>'+
+  '<ellipse cx="69" cy="100" rx="36" ry="24" fill="#FFFDF8" stroke="'+INK+'" stroke-width="3"/>'+
+  '<path d="M30 48 L30 14 L60 30 Z" fill="#FFFDF8" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/><path d="M35 39 L35 24 L49 31 Z" fill="#F7C3CD"/>'+
+  '<path d="M108 48 L108 14 L78 30 Z" fill="#FFFDF8" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/><path d="M103 39 L103 24 L89 31 Z" fill="#F7C3CD"/>'+
+  '<ellipse cx="69" cy="62" rx="44" ry="36" fill="#FFFDF8" stroke="'+INK+'" stroke-width="3"/>'+
+  '<path d="M38 92 Q69 104 100 92 L98 99 Q69 111 40 99Z" fill="#9A88D2" stroke="'+INK+'" stroke-width="2.6" stroke-linejoin="round"/>'+
+  '<ellipse cx="41" cy="72" rx="8" ry="5" fill="#F4B6C2" opacity=".85"/><ellipse cx="97" cy="72" rx="8" ry="5" fill="#F4B6C2" opacity=".85"/>'+
+  (happy?'<path d="M45 63 Q52 54 59 63" fill="none" stroke="'+INK+'" stroke-width="3.2" stroke-linecap="round"/><path d="M79 63 Q86 54 93 63" fill="none" stroke="'+INK+'" stroke-width="3.2" stroke-linecap="round"/>'
+        :'<circle cx="52" cy="61" r="5" fill="'+INK+'"/><circle cx="86" cy="61" r="5" fill="'+INK+'"/><circle cx="53.8" cy="59.2" r="1.7" fill="#fff"/><circle cx="87.8" cy="59.2" r="1.7" fill="#fff"/>')+
+  '<path d="M62 70 Q65.5 75 69 70 Q72.5 75 76 70" fill="none" stroke="'+INK+'" stroke-width="2.6" stroke-linecap="round"/></svg>'}
+
+var KIND={scooter:['pickup','🛵 要你去接'],house:['self','🏠 自己回家'],thought_balloon:['later','💭 晚點再說']};
+function kindOf(it){var t=(it.tags||[])[0];return KIND[t]||['later','💌 新訊息']}
+function sameDay(a,b){var x=new Date(a),y=new Date(b);return x.toDateString()===y.toDateString()}
+function when(t){var d=new Date(t),now=Date.now(),mins=Math.round((now-t)/60000);
+  var day=sameDay(t,now)?'今天':sameDay(t,now-86400000)?'昨天':(d.getMonth()+1)+'/'+d.getDate();
+  var rel=mins<1?'剛剛':mins<60?mins+' 分鐘前':'';
+  return day+' '+pad(d.getHours())+':'+pad(d.getMinutes())+(rel&&sameDay(t,now)?'・'+rel:'')}
+
+var lastShownId=null;
+function render(){
+  $('#hdrCat').innerHTML=cat(false);
+  if(!A.code){$('#pairCard').hidden=false;$('#main').hidden=true;return}
+  $('#pairCard').hidden=true;$('#main').hidden=false;
+  var items=A.items.slice().sort(function(a,b){return b.time-a.time});
+  var top=items[0], L=$('#latest');
+  if(top&&sameDay(top.time,Date.now())){
+    var k=kindOf(top);
+    L.innerHTML='<span class="badge '+k[0]+'">'+k[1]+'</span><span class="when">'+when(top.time)+'</span>'+
+      '<p class="big"></p><p class="msg">'+esc(top.message||'')+'</p>';
+    var big=L.querySelector('.big');
+    if(/^Zee 更新了/.test(top.title||'')){big.textContent='✏️ 她更新了答案'}else{big.remove()}
+    if(lastShownId&&lastShownId!==top.id){L.classList.remove('new');void L.offsetWidth;L.classList.add('new')}
+    lastShownId=top.id;
+  }else{
+    L.innerHTML='<div class="empty"><div class="cat">'+cat(false)+'</div>Zee 今天還沒傳答案過來～<br>有新的會自動出現在這裡。</div>';
+  }
+  var hist=[];
+  items.forEach(function(it){hist.push({t:it.time,html:'<span class="t">'+when(it.time)+'・Zee</span><div class="m">'+esc(it.message||'')+'</div>'})});
+  A.sent.forEach(function(r){hist.push({t:r.time,html:'<span class="t">'+when(r.time)+'・你回覆</span><div class="m me">'+esc(r.text)+'</div>'})});
+  hist.sort(function(a,b){return b.t-a.t});
+  var rest=hist.slice(top&&sameDay(top.time,Date.now())?1:0,30);
+  $('#histCard').hidden=!rest.length;
+  $('#hist').innerHTML=rest.map(function(h){return '<li>'+h.html+'</li>'}).join('');
+  var link=new URL('./',location.href).href+'#pair='+fmtCode(A.code);
+  $('#zeeLink').textContent=link;$('#codeShow').textContent='配對碼：'+fmtCode(A.code);
+  if(T){$('#topicName').textContent=T.ans;$('#ntfyLink').href='ntfy://ntfy.sh/'+T.ans+'?display='+encodeURIComponent('Zee 的下班答案')}
+}
+
+var lastOk=0, busy=false;
+function setLive(ok,text){$('#live').classList.toggle('off',!ok);$('#liveText').textContent=text}
+async function refresh(){
+  if(!A.code||busy)return;
+  if(navigator.onLine===false){setLive(false,'離線中・連上網路後自動更新');return}
+  busy=true;
+  try{
+    if(!T)T=await topics(A.code);
+    var since=A.lastId||'12h';
+    var r=await fetch(NTFY+'/'+T.ans+'/json?poll=1&since='+encodeURIComponent(since));
+    if(!r.ok)throw new Error('http '+r.status);
+    var txt=await r.text(), got=0;
+    txt.split('\n').forEach(function(line){try{var o=JSON.parse(line);
+      if(o.event==='message'&&!A.items.some(function(x){return x.id===o.id})){A.items.push({id:o.id,time:o.time*1000,title:o.title||'',message:o.message||'',tags:o.tags||[]});got++}
+      if(o.event==='message')A.lastId=o.id;}catch(e){}});
+    A.items=A.items.sort(function(a,b){return a.time-b.time}).slice(-50);
+    save();lastOk=Date.now();setLive(true,'即時更新中');
+    if(got)render(); else if(!$('#latest').innerHTML)render();
+  }catch(e){setLive(false,'暫時連不上・稍後自動重試')}
+  busy=false;
+}
+
+var QUICK=['收到！我準時到 🛵','好～路上小心，到家說一聲 ♡','了解，等妳消息～','我可能會晚一點，到了跟妳說'];
+$('#quick').innerHTML=QUICK.map(function(q,i){return '<button class="chip" type="button" data-q="'+i+'">'+esc(q)+'</button>'}).join('');
+$('#quick').addEventListener('click',function(e){var b=e.target.closest('[data-q]');if(b)reply(QUICK[+b.dataset.q])});
+$('#replySend').addEventListener('click',function(){var v=$('#replyInput').value.trim();if(v)reply(v)});
+$('#replyInput').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();var v=this.value.trim();if(v)reply(v)}});
+async function reply(text){
+  var st=$('#replyStatus');
+  if(navigator.onLine===false){st.textContent='現在沒有網路，連上之後再傳喔。';return}
+  $('#replySend').disabled=true;st.textContent='傳送中…';
+  try{
+    if(!T)T=await topics(A.code);
+    var r=await fetch(NTFY+'/',{method:'POST',body:JSON.stringify({topic:T.rep,title:'Alex 回覆',message:text,tags:['speech_balloon']})});
+    if(!r.ok)throw new Error('http '+r.status);
+    A.sent.push({time:Date.now(),text:text});A.sent=A.sent.slice(-30);save();
+    st.textContent='已傳給 Zee ✓ 她打開 App 的小卡頁就看得到。';$('#replyInput').value='';render();
+  }catch(e){st.textContent='沒傳出去，網路好像不太穩，再試一次看看。'}
+  $('#replySend').disabled=false;
+}
+
+function pair(c){A.code=c;A.items=A.items||[];A.lastId=null;T=null;save();render();refresh()}
+$('#pairOk').addEventListener('click',function(){var c=norm($('#pairInput').value);if(!c){$('#pairErr').textContent='配對碼是 8 個英文和數字，例如 ABCD-2345。';return}$('#pairErr').textContent='';pair(c)});
+$('#pairInput').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();$('#pairOk').click()}});
+$('#unpair').addEventListener('click',function(){A.code=null;A.lastId=null;T=null;save();render()});
+document.addEventListener('click',function(e){var b=e.target.closest('[data-copy]');if(!b)return;
+  var v=b.dataset.copy==='topic'?(T&&T.ans):b.dataset.copy==='link'?$('#zeeLink').textContent:fmtCode(A.code||'');
+  var done=function(){var o=b.textContent;b.textContent='已複製 ✓';setTimeout(function(){b.textContent=o},1500)};
+  try{navigator.clipboard.writeText(v).then(done,function(){})}catch(err){}});
+
+var m=location.hash.match(/pair=([A-Za-z0-9-]+)/);
+if(m){var c=norm(m[1]);if(c&&c!==A.code){A.code=c;A.lastId=null;save()}}
+render();
+(async function(){if(A.code){T=await topics(A.code);render();refresh()}})();
+setInterval(function(){if(!document.hidden)refresh()},15000);
+setInterval(function(){if(!document.hidden&&A.code)render()},60000);
+document.addEventListener('visibilitychange',function(){if(!document.hidden)refresh()});
+window.addEventListener('online',refresh);window.addEventListener('offline',function(){setLive(false,'離線中・連上網路後自動更新')});
+if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost'||location.hostname==='127.0.0.1')){try{navigator.serviceWorker.register('sw.js').catch(function(){})}catch(e){}}
+window.__alex={refresh:refresh,state:function(){return A},topics:function(){return T}};
+})();
+</script>
+</body>
+</html>
