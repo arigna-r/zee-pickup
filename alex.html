@@ -77,6 +77,11 @@ code.k{display:block;margin-top:8px;padding:10px 12px;border-radius:12px;backgro
 .fine{font-size:13px;color:var(--ink-soft);text-align:center;margin:6px 8px 0;line-height:1.7}
 .pair input{text-transform:uppercase;letter-spacing:.12em;text-align:center;font-weight:700;font-size:20px}
 .err{color:#8E3E52;font-size:14px;min-height:1.3em;margin:6px 0 0}
+.chip[aria-pressed="true"]{background:var(--blush-soft);border-color:var(--blush-deep);color:#8E3E52}
+#noteInput{width:100%;min-height:96px;margin-top:4px;padding:12px 14px;border-radius:var(--r-sm);border:1.5px solid var(--line);background:#FFFDF7;font:inherit;font-size:17px;line-height:1.6;resize:vertical}
+#noteInput:focus{outline:none;border-color:var(--lav-deep);box-shadow:0 0 0 4px rgba(205,189,235,.45)}
+.sub2{margin:0 0 8px;color:var(--ink-soft);font-size:14.5px}
+.badge.gift{background:#E4F3E8;color:#2F6B45}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -105,6 +110,17 @@ code.k{display:block;margin-top:8px;padding:10px 12px;border-radius:12px;backgro
       <div class="chips" id="quick"></div>
       <div class="row"><label class="sr-only" for="replyInput">自己打一句</label><input id="replyInput" maxlength="120" placeholder="或自己打一句…" enterkeyhint="send"><button class="btn" id="replySend" type="button">傳給 Zee</button></div>
       <p class="status" id="replyStatus" role="status" aria-live="polite"></p>
+    </section>
+
+    <section class="card" aria-labelledby="noteTitle">
+      <h2 id="noteTitle">寫張小紙條給 Zee 📝</h2>
+      <p class="sub2">她那天打開 App，首頁就會出現你的小紙條。最多可以預約到後天。</p>
+      <label class="sr-only" for="noteInput">小紙條內容</label>
+      <textarea id="noteInput" maxlength="120" placeholder="例如：今天也辛苦了，晚上帶妳去吃好吃的 ♡"></textarea>
+      <div class="chips" id="noteDays" role="group" aria-label="哪一天" style="margin-top:10px"></div>
+      <div class="row"><button class="btn pink" id="noteSend" type="button" style="flex:1">送出小紙條</button></div>
+      <p class="status" id="noteStatus" role="status" aria-live="polite"></p>
+      <ul class="hist" id="noteList" hidden style="margin-top:8px"></ul>
     </section>
 
     <section class="card" id="histCard" hidden>
@@ -150,7 +166,7 @@ var A=Object.assign({code:null,items:[],sent:[]},load());
 function save(){try{localStorage.setItem(KEY,JSON.stringify(A))}catch(e){}}
 var T=null;
 async function topics(code){var d=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('zee-pickup|'+code));
-  var h=Array.prototype.map.call(new Uint8Array(d),function(x){return x.toString(16).padStart(2,'0')}).join('');return {ans:'zp_'+h.slice(0,28),rep:'zp_'+h.slice(28,56)}}
+  var h=Array.prototype.map.call(new Uint8Array(d),function(x){return x.toString(16).padStart(2,'0')}).join('');return {ans:'zp_'+h.slice(0,28),rep:'zp_'+h.slice(28,56),nts:'zp_'+h.slice(56)+h.slice(0,20)}}
 
 var INK='#4A3A3F';
 function cat(happy){return '<svg viewBox="0 0 140 132" xmlns="http://www.w3.org/2000/svg">'+
@@ -166,7 +182,7 @@ function cat(happy){return '<svg viewBox="0 0 140 132" xmlns="http://www.w3.org/
   '<path d="M62 70 Q65.5 75 69 70 Q72.5 75 76 70" fill="none" stroke="'+INK+'" stroke-width="2.6" stroke-linecap="round"/></svg>'}
 
 var KIND={scooter:['pickup','🛵 要你去接'],house:['self','🏠 自己回家'],thought_balloon:['later','💭 晚點再說']};
-function kindOf(it){var tg=it.tags||[];if(tg[0]==='scooter'&&tg.indexOf('books')>=0)return ['pickup','📚 下課要你去接'];return KIND[tg[0]]||['later','💌 新訊息']}
+function kindOf(it){var tg=it.tags||[];if(tg[0]==='gift')return ['gift','🎁 想兌換獎勵'];if(tg[0]==='scooter'&&tg.indexOf('books')>=0)return ['pickup','📚 下課要你去接'];return KIND[tg[0]]||['later','💌 新訊息']}
 function sameDay(a,b){var x=new Date(a),y=new Date(b);return x.toDateString()===y.toDateString()}
 function when(t){var d=new Date(t),now=Date.now(),mins=Math.round((now-t)/60000);
   var day=sameDay(t,now)?'今天':sameDay(t,now-86400000)?'昨天':(d.getMonth()+1)+'/'+d.getDate();
@@ -244,6 +260,41 @@ async function reply(text){
   }catch(e){st.textContent='沒傳出去，網路好像不太穩，再試一次看看。'}
   $('#replySend').disabled=false;
 }
+
+var DAYN=['今天','明天','後天'], noteDay=0;
+$('#noteDays').innerHTML=DAYN.map(function(t,i){return '<button class="chip" type="button" data-nd="'+i+'" aria-pressed="'+(i===0)+'">'+t+'</button>'}).join('');
+$('#noteDays').addEventListener('click',function(e){var b=e.target.closest('[data-nd]');if(!b)return;noteDay=+b.dataset.nd;
+  Array.prototype.forEach.call($('#noteDays').children,function(c){c.setAttribute('aria-pressed',String(+c.dataset.nd===noteDay))})});
+function at(off,h){var d=new Date();d.setDate(d.getDate()+off);d.setHours(h,0,0,0);return d}
+function dayLabel(t){var a=new Date(t);a.setHours(0,0,0,0);var b=new Date();b.setHours(0,0,0,0);var n=Math.round((a-b)/86400000);
+  return (DAYN[n]||'')+'（'+(a.getMonth()+1)+'/'+a.getDate()+'）'}
+function renderNotes(){var start=new Date().setHours(0,0,0,0);
+  var list=(A.notes||[]).filter(function(n){return n.d>=start}).sort(function(a,b){return a.d-b.d});
+  $('#noteList').innerHTML=list.map(function(n){return '<li><span class="t">'+dayLabel(n.d)+'・已送出</span><div class="m me">'+esc(n.text)+'</div></li>'}).join('');
+  $('#noteList').hidden=!list.length}
+$('#noteSend').addEventListener('click',async function(){
+  var text=$('#noteInput').value.trim(), st=$('#noteStatus'), btn=this;
+  if(!text){st.textContent='先寫幾個字吧～';return}
+  if(navigator.onLine===false){st.textContent='現在沒有網路，連上之後再送喔。';return}
+  btn.disabled=true;st.textContent='送出中…';
+  try{
+    if(!T)T=await topics(A.code);
+    var times=[], now=Date.now();
+    if(noteDay===0){times.push(null);if(now<at(0,13).getTime())times.push(at(0,13))}
+    else{times.push(at(noteDay,6));times.push(at(noteDay,13))}
+    for(var i=0;i<times.length;i++){
+      var body={topic:T.nts,title:'Alex 的小紙條',message:text,tags:['love_letter']};
+      if(times[i])body.delay=String(Math.floor(times[i].getTime()/1000));
+      var r=await fetch(NTFY+'/',{method:'POST',body:JSON.stringify(body)});
+      if(!r.ok)throw new Error('http '+r.status);
+    }
+    A.notes=(A.notes||[]).concat([{d:at(noteDay,12).getTime(),text:text}]).slice(-20);save();
+    st.textContent=noteDay===0?'已送出 ✓ 她今天打開 App，首頁就會看到 ♡':'已預約 ✓ '+dayLabel(at(noteDay,12))+'她打開 App 就會看到 ♡';
+    $('#noteInput').value='';renderNotes();
+  }catch(e){st.textContent='沒送出去，網路好像不太穩，再試一次看看。'}
+  btn.disabled=false;
+});
+renderNotes();
 
 function pair(c){A.code=c;A.items=A.items||[];A.lastId=null;T=null;save();render();refresh()}
 $('#pairOk').addEventListener('click',function(){var c=norm($('#pairInput').value);if(!c){$('#pairErr').textContent='配對碼是 8 個英文和數字，例如 ABCD-2345。';return}$('#pairErr').textContent='';pair(c)});

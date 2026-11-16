@@ -30,7 +30,7 @@
     if (topicCache[code]) return topicCache[code];
     var d = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('zee-pickup|' + code));
     var h = Array.prototype.map.call(new Uint8Array(d), function (x) { return x.toString(16).padStart(2, '0'); }).join('');
-    return (topicCache[code] = { ans: 'zp_' + h.slice(0, 28), rep: 'zp_' + h.slice(28, 56) });
+    return (topicCache[code] = { ans: 'zp_' + h.slice(0, 28), rep: 'zp_' + h.slice(28, 56), nts: 'zp_' + h.slice(56) + h.slice(0, 20) });
   }
 
   var HEADS = {
@@ -120,7 +120,7 @@
     }
     flushing = false;
     if (Z.state() === S) { Z.save(); render(); }
-    if (k.status === 'sent') { Z.toast('已送給 Alex ✓'); pollReply(); }
+    if (k.status === 'sent') { Z.toast('已送給 Alex ✓'); pollReply(); if (window.__zeeExtras) window.__zeeExtras.delivered(true); }
   }
 
   /* ---------- Alex's reply ---------- */
@@ -192,6 +192,7 @@
   // A send left "sending" by a closed app goes back to the queue.
   (function () { var S = Z.state(); if (S.link && S.link.status === 'sending') { S.link.status = 'queued'; Z.save(); } })();
 
-  window.__zeeLink = { render: render, send: send, flush: flush, pollReply: pollReply, paired: function () { return !!L.code; } };
+  window.__zeeLink = { render: render, send: send, flush: flush, pollReply: pollReply, paired: function () { return !!L.code; },
+    topics: function () { return L.code ? topics(L.code) : Promise.resolve(null); }, NTFY: NTFY };
   render(); flush(); pollReply();
 })();

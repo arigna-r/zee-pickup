@@ -266,6 +266,7 @@ button{cursor:pointer;touch-action:manipulation}
       <span class="pill" id="datePill"></span>
       <div class="top-right">
         <span class="pill offline" data-offline hidden>離線中・照常可用</span>
+        <button class="pill stamp-pill" type="button" id="stampPill" hidden>🐾 0/10</button>
         <button class="icon-btn" type="button" data-open-about aria-label="關於這個小站">i</button>
       </div>
     </div>
@@ -277,6 +278,7 @@ button{cursor:pointer;touch-action:manipulation}
       <button class="choice" type="button" data-choice="self" aria-pressed="false"><span class="ci" aria-hidden="true">🏠</span><span>今天自己回家～</span></button>
       <button class="choice" type="button" data-choice="later" aria-pressed="false"><span class="ci" aria-hidden="true">💭</span><span>還不確定，晚點跟你說</span></button>
     </div>
+    <div class="note-card" id="noteCard" aria-live="polite" hidden></div>
     <p class="soft-note">怎麼選都好，選了之後也能隨時改 ♡</p>
     <p class="notice" id="newDayNote" hidden>新的一天～昨天的選擇已經收起來囉 ☀️</p>
     <div class="hint" id="installHint" hidden></div>
@@ -410,12 +412,14 @@ button{cursor:pointer;touch-action:manipulation}
     <p>按「直接傳給 Alex」時，訊息會經過 ntfy.sh 這個免費的轉送服務送到 Alex 的收件匣（伺服器只保留約 12 小時），用的是只有你們知道的配對碼。</p>
     <h3>✈️ 沒網路的時候</h3>
     <p>第一次在有網路時打開後，就算沒網路，也能打開、選擇、做小卡和複製。傳給 Alex 需要網路；沒網路時按下傳送，會等連上線再自動送出。</p>
+    <h3>🐾 集點卡和小紙條</h3>
+    <p>每次請 Alex 來接都會蓋一個章，集滿 10 個可以換小獎勵。Alex 寫的小紙條，會在當天出現在首頁。小貓也可以摸摸看喔。</p>
     <h3>☀️ 新的一天</h3>
     <p>每天會自動清空當天的選擇（像是下班時間），不會不小心用到昨天的。之前填過的地點會留著，方便下次點選。</p>
     <button class="btn ghost" type="button" id="clearToday">清空今天的選擇</button>
     <button class="btn ghost" type="button" id="clearPlaces">清除之前填過的地點</button>
     <button class="btn primary" type="button" data-close>知道了</button>
-    <p style="margin-top:14px;font-size:12px;text-align:center">版本 1.2</p>
+    <p style="margin-top:14px;font-size:12px;text-align:center">版本 1.3</p>
   </div>
 </div>
 
@@ -682,6 +686,7 @@ function renderWelcome(){
   });
   $('#newDayNote').hidden=!newDay;
   renderHint();
+  if(window.__zeeExtras)window.__zeeExtras.welcome();
 }
 function renderHint(){
   var h=$('#installHint');
@@ -883,7 +888,7 @@ function legacyCopy(text){
 }
 function doCopy(){
   var text=currentMsg();
-  var done=function(){setStatus('已複製好囉 ✓ 打開和 Alex 的聊天視窗，貼上再按送出就可以了。'+(navigator.onLine===false?'（現在沒網路，連上之後再傳喔）':''))};
+  var done=function(){if(window.__zeeExtras)window.__zeeExtras.delivered();setStatus('已複製好囉 ✓ 打開和 Alex 的聊天視窗，貼上再按送出就可以了。'+(navigator.onLine===false?'（現在沒網路，連上之後再傳喔）':''))};
   var fail=function(){if(legacyCopy(text))done();else openManual(text)};
   try{
     if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(text).then(done,fail)}
@@ -894,6 +899,7 @@ function doShare(){
   var text=currentMsg();
   try{
     navigator.share({text:text}).then(function(){
+      if(window.__zeeExtras)window.__zeeExtras.delivered();
       setStatus('已經交給妳選的 App 囉～記得確認訊息有按下送出。'+(navigator.onLine===false?'現在沒網路，可能要等連上線才會送出。':''));
     },function(err){
       if(err&&err.name==='AbortError')setStatus('沒關係～想傳的時候再按一次就好。');
@@ -955,5 +961,6 @@ window.__zee={state:function(){return S},buildMsg:buildMsg,currentMsg:currentMsg
 })();
 </script>
 <script src="link.js"></script>
+<script src="extras.js"></script>
 </body>
 </html>
