@@ -16,6 +16,7 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <style>
+@font-face{font-family:"Huninn";src:url("jf-openhuninn-2.1.ttf") format("truetype");font-display:swap}
 :root{
   --cream:#FFF8EF; --cream-2:#FBEFE3; --card:#FFFDF9;
   --blush:#F4B6C2; --blush-soft:#FCE6EA; --blush-deep:#DC7F94;
@@ -26,8 +27,8 @@
   --r-lg:28px; --r-md:20px; --r-sm:14px;
   --shadow:0 1px 2px rgba(74,58,63,.06),0 8px 24px -10px rgba(122,88,96,.22);
   --shadow-press:0 1px 2px rgba(74,58,63,.08),0 3px 10px -6px rgba(122,88,96,.25);
-  --font:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC","Microsoft JhengHei","Heiti TC",system-ui,sans-serif;
-  --font-round:ui-rounded,"SF Pro Rounded",-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif;
+  --font:"Huninn",-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC","Microsoft JhengHei","Heiti TC",system-ui,sans-serif;
+  --font-round:"Huninn",ui-rounded,"SF Pro Rounded",-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif;
   --ease:cubic-bezier(.22,.8,.3,1);
 }
 *{box-sizing:border-box}
@@ -74,8 +75,8 @@ button{cursor:pointer;touch-action:manipulation}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
 .wheel{animation:spin 1.6s linear infinite;transform-box:fill-box;transform-origin:center}
 @keyframes spin{to{transform:rotate(360deg)}}
-.speed line{animation:whoosh 1.6s ease-in-out infinite}
-.speed line:nth-child(2){animation-delay:.25s}.speed line:nth-child(3){animation-delay:.5s}
+.speed > *{animation:whoosh 1.6s ease-in-out infinite}
+.speed > :nth-child(2){animation-delay:.25s}.speed > :nth-child(3){animation-delay:.5s}
 @keyframes whoosh{0%,100%{opacity:.25;transform:translateX(0)}50%{opacity:.9;transform:translateX(-5px)}}
 .hello{margin:10px 0 2px;font-size:17px;color:var(--ink-soft);text-align:center}
 .ask{margin:0 0 18px;font-size:clamp(23px,6.4vw,27px);line-height:1.4;font-weight:700;text-align:center;letter-spacing:.02em;text-wrap:balance}
@@ -419,7 +420,7 @@ button{cursor:pointer;touch-action:manipulation}
     <button class="btn ghost" type="button" id="clearToday">清空今天的選擇</button>
     <button class="btn ghost" type="button" id="clearPlaces">清除之前填過的地點</button>
     <button class="btn primary" type="button" data-close>知道了</button>
-    <p style="margin-top:14px;font-size:12px;text-align:center">版本 1.3</p>
+    <p style="margin-top:14px;font-size:12px;text-align:center">版本 1.4・字型：jf open 粉圓（SIL OFL 1.1）</p>
   </div>
 </div>
 
@@ -508,48 +509,50 @@ function catSVG(mood){
   var id='cc'+(++uid);
   mood=mood||'default';
   var tired=mood==='low';
-  var ears = tired
-    ? '<path d="M30 52 L18 24 L52 34 Z" fill="#FFFDF8" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/><path d="M29 44 L24 31 L40 36 Z" fill="#F7C3CD"/>'+
-      '<path d="M106 52 L120 24 L86 34 Z" fill="#FFFDF8" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/><path d="M107 44 L114 31 L98 36 Z" fill="#F7C3CD"/>'
-    : '<path d="M30 48 L30 14 L60 30 Z" fill="#FFFDF8" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/><path d="M35 39 L35 24 L49 31 Z" fill="#F7C3CD"/>'+
-      '<path d="M108 48 L108 14 L78 30 Z" fill="#FFFDF8" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/><path d="M103 39 L103 24 L89 31 Z" fill="#F7C3CD"/>';
+  var earL='<path d="M27 54 C20 32 24 12 35 11 C45 11 56 24 62 33 Z" fill="#FFFDF8" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/><path d="M33 42 C30 30 32 21 37 21 C42 22 48 28 51 33 Z" fill="#F7C3CD"/>';
+  var earR='<path d="M111 54 C118 32 114 12 103 11 C93 11 82 24 76 33 Z" fill="#FFFDF8" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/><path d="M105 42 C108 30 106 21 101 21 C96 22 90 28 87 33 Z" fill="#F7C3CD"/>';
+  var ears = tired ? '<g transform="rotate(-24 42 44)">'+earL+'</g><g transform="rotate(24 96 44)">'+earR+'</g>' : earL+earR;
   var eyes, mouth, extra='', brows='';
   if(mood==='low'){
-    eyes='<path d="M46 62 Q53 66 60 62" fill="none" stroke="'+INK+'" stroke-width="3" stroke-linecap="round"/><path d="M78 62 Q85 66 92 62" fill="none" stroke="'+INK+'" stroke-width="3" stroke-linecap="round"/>'+
-         '<path d="M45 58 L61 58 M77 58 L93 58" stroke="'+INK+'" stroke-width="2.4" stroke-linecap="round" opacity=".55"/>';
-    mouth='<path d="M63 74 Q66 71 69 74 Q72 77 75 74" fill="none" stroke="'+INK+'" stroke-width="2.6" stroke-linecap="round"/>';
-    extra='<path d="M114 40 C114 40 108 48 108 52 a6 6 0 0 0 12 0 C120 48 114 40 114 40Z" fill="#CFE6F5" stroke="'+INK+'" stroke-width="2"/>'+
-          '<text x="118" y="22" font-size="15" font-weight="700" fill="#9A88D2" font-family="ui-rounded,system-ui">z</text><text x="128" y="10" font-size="11" font-weight="700" fill="#C9B8E8" font-family="ui-rounded,system-ui">z</text>';
+    eyes='<path d="M45 62 Q53 67 61 62" fill="none" stroke="'+INK+'" stroke-width="3.2" stroke-linecap="round"/><path d="M77 62 Q85 67 93 62" fill="none" stroke="'+INK+'" stroke-width="3.2" stroke-linecap="round"/>';
+    mouth='<path d="M64 75 Q66.5 72.5 69 75 Q71.5 77.5 74 75" fill="none" stroke="'+INK+'" stroke-width="2.6" stroke-linecap="round"/>';
+    extra='<path d="M116 38 C116 38 110 46 110 50 a6 6 0 0 0 12 0 C122 46 116 38 116 38Z" fill="#CFE6F5" stroke="'+INK+'" stroke-width="2"/>'+
+          '<text x="120" y="20" font-size="15" font-weight="700" fill="#9A88D2" font-family="ui-rounded,system-ui">z</text><text x="130" y="8" font-size="11" font-weight="700" fill="#C9B8E8" font-family="ui-rounded,system-ui">z</text>';
   }else if(mood==='high'){
-    eyes='<path d="M45 63 Q52 54 59 63" fill="none" stroke="'+INK+'" stroke-width="3.2" stroke-linecap="round"/><path d="M79 63 Q86 54 93 63" fill="none" stroke="'+INK+'" stroke-width="3.2" stroke-linecap="round"/>';
-    mouth='<path d="M62 70 Q69 69 76 70 Q75 80 69 80 Q63 80 62 70Z" fill="#E58A9E" stroke="'+INK+'" stroke-width="2.4" stroke-linejoin="round"/>';
-    extra='<path d="M14 30 l3 7 7 3 -7 3 -3 7 -3 -7 -7 -3 7 -3z" fill="#FBE7B5" stroke="'+INK+'" stroke-width="1.6" stroke-linejoin="round"/>'+
-          '<path d="M122 22 l2.4 5.6 5.6 2.4 -5.6 2.4 -2.4 5.6 -2.4 -5.6 -5.6 -2.4 5.6 -2.4z" fill="#CDBDEB" stroke="'+INK+'" stroke-width="1.5" stroke-linejoin="round"/>'+
+    eyes='<path d="M45 64 Q53 54 61 64" fill="none" stroke="'+INK+'" stroke-width="3.4" stroke-linecap="round"/><path d="M77 64 Q85 54 93 64" fill="none" stroke="'+INK+'" stroke-width="3.4" stroke-linecap="round"/>';
+    mouth='<path d="M63 71 Q69 70 75 71 Q74 81 69 81 Q64 81 63 71Z" fill="#E58A9E" stroke="'+INK+'" stroke-width="2.4" stroke-linejoin="round"/>';
+    extra='<path d="M12 30 l3 7 7 3 -7 3 -3 7 -3 -7 -7 -3 7 -3z" fill="#FBE7B5" stroke="'+INK+'" stroke-width="1.6" stroke-linejoin="round"/>'+
+          '<path d="M124 20 l2.4 5.6 5.6 2.4 -5.6 2.4 -2.4 5.6 -2.4 -5.6 -5.6 -2.4 5.6 -2.4z" fill="#CDBDEB" stroke="'+INK+'" stroke-width="1.5" stroke-linejoin="round"/>'+
           '<path d="M126 58 c0 -4 6 -4 6 0 c0 -4 6 -4 6 0 c0 5 -6 8 -6 8 c0 0 -6 -3 -6 -8z" fill="#F4B6C2" stroke="'+INK+'" stroke-width="1.5"/>';
   }else{
-    eyes='<circle cx="52" cy="61" r="5" fill="'+INK+'"/><circle cx="86" cy="61" r="5" fill="'+INK+'"/><circle cx="53.8" cy="59.2" r="1.7" fill="#fff"/><circle cx="87.8" cy="59.2" r="1.7" fill="#fff"/>';
-    mouth='<path d="M62 70 Q65.5 75 69 70 Q72.5 75 76 70" fill="none" stroke="'+INK+'" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>';
+    eyes='<ellipse cx="53" cy="61" rx="5.6" ry="6.8" fill="'+INK+'"/><ellipse cx="85" cy="61" rx="5.6" ry="6.8" fill="'+INK+'"/>'+
+         '<circle cx="55" cy="58.4" r="2.2" fill="#fff"/><circle cx="87" cy="58.4" r="2.2" fill="#fff"/><circle cx="51.4" cy="64" r="1" fill="#fff"/><circle cx="83.4" cy="64" r="1" fill="#fff"/>';
+    mouth='<path d="M65 72 l4 2.6 l4 -2.6" fill="#F4B6C2" stroke="none"/><path d="M63 74 Q66 78 69 74.5 Q72 78 75 74" fill="none" stroke="'+INK+'" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>';
     if(mood==='mid'){
-      brows='<path d="M45 51 L57 54 M93 51 L81 54" stroke="'+INK+'" stroke-width="2.6" stroke-linecap="round"/>';
-      extra='<g transform="translate(112 72)"><circle r="9" fill="#FFFDF8" stroke="'+INK+'" stroke-width="2.6"/><path d="M-3 -2 v4 M0 -3 v5 M3 -2 v4" stroke="'+INK+'" stroke-width="1.6" stroke-linecap="round"/></g>';
+      brows='<path d="M45 50 L58 53 M93 50 L80 53" stroke="'+INK+'" stroke-width="2.6" stroke-linecap="round"/>';
+      extra='<g transform="translate(116 74)"><circle r="9" fill="#FFFDF8" stroke="'+INK+'" stroke-width="2.6"/><path d="M-3 -2 v4 M0 -3 v5 M3 -2 v4" stroke="'+INK+'" stroke-width="1.6" stroke-linecap="round"/></g>';
     }
   }
-  var bodyRy = tired? 21:24, bodyCy = tired? 103:100;
+  var bodyRy = tired? 20:23, bodyCy = tired? 104:101;
   return '<svg viewBox="0 0 140 132" xmlns="http://www.w3.org/2000/svg" role="img">'+
-    '<defs><clipPath id="'+id+'"><ellipse cx="69" cy="62" rx="44" ry="36"/></clipPath></defs>'+
-    '<ellipse cx="69" cy="126" rx="44" ry="5" fill="'+INK+'" opacity=".08"/>'+
-    '<path d="M100 112 C128 114 132 88 118 78" fill="none" stroke="'+INK+'" stroke-width="12" stroke-linecap="round"/>'+
-    '<path d="M100 112 C128 114 132 88 118 78" fill="none" stroke="#FFFDF8" stroke-width="6.5" stroke-linecap="round"/>'+
-    '<ellipse cx="69" cy="'+bodyCy+'" rx="36" ry="'+bodyRy+'" fill="#FFFDF8" stroke="'+INK+'" stroke-width="3"/>'+
-    '<ellipse cx="55" cy="121" rx="10" ry="6" fill="#FFFDF8" stroke="'+INK+'" stroke-width="2.6"/><ellipse cx="83" cy="121" rx="10" ry="6" fill="#FFFDF8" stroke="'+INK+'" stroke-width="2.6"/>'+
+    '<defs><clipPath id="'+id+'"><ellipse cx="69" cy="62" rx="45" ry="37"/></clipPath></defs>'+
+    '<ellipse cx="69" cy="127" rx="42" ry="5" fill="'+INK+'" opacity=".08"/>'+
+    '<path d="M101 113 C127 115 131 90 118 80" fill="none" stroke="'+INK+'" stroke-width="12" stroke-linecap="round"/>'+
+    '<path d="M101 113 C127 115 131 90 118 80" fill="none" stroke="#FFFDF8" stroke-width="6.5" stroke-linecap="round"/>'+
+    '<path d="M113 74 c0 -5 7 -5 7 0 c0 -5 7 -5 7 0 c0 6 -7 9 -7 9 c0 0 -7 -3 -7 -9z" fill="#F4B6C2" stroke="'+INK+'" stroke-width="2" transform="rotate(20 120 78)"/>'+
+    '<ellipse cx="69" cy="'+bodyCy+'" rx="34" ry="'+bodyRy+'" fill="#FFFDF8" stroke="'+INK+'" stroke-width="3"/>'+
+    '<ellipse cx="54" cy="121" rx="10.5" ry="6.5" fill="#FFFDF8" stroke="'+INK+'" stroke-width="2.6"/><ellipse cx="84" cy="121" rx="10.5" ry="6.5" fill="#FFFDF8" stroke="'+INK+'" stroke-width="2.6"/>'+
+    '<circle cx="50" cy="121.5" r="1.6" fill="#F4B6C2"/><circle cx="54" cy="119.5" r="1.6" fill="#F4B6C2"/><circle cx="58" cy="121.5" r="1.6" fill="#F4B6C2"/>'+
+    '<circle cx="80" cy="121.5" r="1.6" fill="#F4B6C2"/><circle cx="84" cy="119.5" r="1.6" fill="#F4B6C2"/><circle cx="88" cy="121.5" r="1.6" fill="#F4B6C2"/>'+
     ears+
-    '<ellipse cx="69" cy="62" rx="44" ry="36" fill="#FFFDF8"/>'+
-    '<g clip-path="url(#'+id+')"><ellipse cx="102" cy="34" rx="26" ry="20" fill="#F6D2B8"/></g>'+
-    '<ellipse cx="69" cy="62" rx="44" ry="36" fill="none" stroke="'+INK+'" stroke-width="3"/>'+
-    '<path d="M38 92 Q69 104 100 92 L98 99 Q69 111 40 99Z" fill="#E58A9E" stroke="'+INK+'" stroke-width="2.6" stroke-linejoin="round"/>'+
-    '<path d="M56 100 L50 113 L62 107Z" fill="#E58A9E" stroke="'+INK+'" stroke-width="2.4" stroke-linejoin="round"/>'+
-    '<ellipse cx="41" cy="72" rx="8" ry="5" fill="#F4B6C2" opacity=".85"/><ellipse cx="97" cy="72" rx="8" ry="5" fill="#F4B6C2" opacity=".85"/>'+
-    '<path d="M24 66 L12 63 M24 71 L12 73 M114 66 L126 63 M114 71 L126 73" stroke="'+INK+'" stroke-width="2" stroke-linecap="round" opacity=".6"/>'+
+    '<ellipse cx="69" cy="62" rx="45" ry="37" fill="#FFFDF8"/>'+
+    '<g clip-path="url(#'+id+')"><ellipse cx="104" cy="32" rx="27" ry="21" fill="#F6D2B8"/></g>'+
+    '<ellipse cx="69" cy="62" rx="45" ry="37" fill="none" stroke="'+INK+'" stroke-width="3"/>'+
+    '<path d="M37 93 Q69 106 101 93 L99 101 Q69 113 39 101Z" fill="#E58A9E" stroke="'+INK+'" stroke-width="2.6" stroke-linejoin="round"/>'+
+    '<path d="M55 102 L49 115 L61 109Z" fill="#E58A9E" stroke="'+INK+'" stroke-width="2.4" stroke-linejoin="round"/>'+
+    '<circle cx="80" cy="104" r="3" fill="#FBE7B5" stroke="'+INK+'" stroke-width="1.6"/>'+
+    '<ellipse cx="40" cy="73" rx="9" ry="5.5" fill="#F7A8B8" opacity=".85"/><ellipse cx="98" cy="73" rx="9" ry="5.5" fill="#F7A8B8" opacity=".85"/>'+
+    '<path d="M21 66 L10 63 M21 71 L10 73 M117 66 L128 63 M117 71 L128 73" stroke="'+INK+'" stroke-width="2" stroke-linecap="round" opacity=".5"/>'+
     brows+eyes+mouth+extra+
   '</svg>';
 }
@@ -557,52 +560,63 @@ function heroSVG(opts){
   opts=opts||{};
   var anim=opts.animate!==false;
   return '<svg viewBox="0 0 270 196" xmlns="http://www.w3.org/2000/svg" role="img">'+
-  '<ellipse cx="140" cy="180" rx="104" ry="8" fill="'+INK+'" opacity=".08"/>'+
+  '<ellipse cx="140" cy="182" rx="104" ry="8" fill="'+INK+'" opacity=".08"/>'+
   (anim?'<g class="speed">':'<g>')+
-    '<line x1="14" y1="112" x2="38" y2="112" stroke="#F4B6C2" stroke-width="5" stroke-linecap="round"/>'+
-    '<line x1="6" y1="128" x2="34" y2="128" stroke="#CDBDEB" stroke-width="5" stroke-linecap="round"/>'+
-    '<line x1="16" y1="144" x2="36" y2="144" stroke="#F4B6C2" stroke-width="5" stroke-linecap="round"/></g>'+
+    '<g><circle cx="24" cy="138" r="8" fill="#FFFDF8" stroke="#E9D9DE" stroke-width="2"/><circle cx="14" cy="130" r="5.5" fill="#FFFDF8" stroke="#E9D9DE" stroke-width="2"/></g>'+
+    '<g><circle cx="20" cy="116" r="5" fill="#FFFDF8" stroke="#E9D9DE" stroke-width="2"/></g>'+
+    '<g><circle cx="8" cy="146" r="4" fill="#FFFDF8" stroke="#E9D9DE" stroke-width="2"/></g></g>'+
   '<g'+(anim?' class="bob"':'')+'>'+
     // wheels
-    '<g'+(anim?' class="wheel"':'')+'><circle cx="78" cy="156" r="21" fill="'+INK+'"/><circle cx="78" cy="156" r="9" fill="#FFF8EF"/><path d="M78 147 v18 M69 156 h18" stroke="'+INK+'" stroke-width="2.4"/></g>'+
-    '<g'+(anim?' class="wheel"':'')+'><circle cx="206" cy="156" r="21" fill="'+INK+'"/><circle cx="206" cy="156" r="9" fill="#FFF8EF"/><path d="M206 147 v18 M197 156 h18" stroke="'+INK+'" stroke-width="2.4"/></g>'+
-    // rear body
-    '<path d="M44 144 C40 116 56 104 84 104 L142 104 C151 104 155 110 155 119 L155 131 L184 131 L188 144 Z" fill="#CDBDEB" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/>'+
-    '<path d="M64 122 L140 122" stroke="#fff" stroke-width="4.5" stroke-linecap="round" opacity=".7"/>'+
-    '<rect x="39" y="116" width="9" height="11" rx="3.5" fill="#E58A9E" stroke="'+INK+'" stroke-width="2.4"/>'+
+    '<g'+(anim?' class="wheel"':'')+'><circle cx="78" cy="157" r="21" fill="'+INK+'"/><circle cx="78" cy="157" r="12" fill="#FFF6EC"/><circle cx="78" cy="157" r="5" fill="#F4B6C2"/>'+
+      '<circle cx="78" cy="148.5" r="1.8" fill="#C9B8E8"/><circle cx="86.5" cy="157" r="1.8" fill="#C9B8E8"/><circle cx="78" cy="165.5" r="1.8" fill="#C9B8E8"/><circle cx="69.5" cy="157" r="1.8" fill="#C9B8E8"/></g>'+
+    '<g'+(anim?' class="wheel"':'')+'><circle cx="206" cy="157" r="21" fill="'+INK+'"/><circle cx="206" cy="157" r="12" fill="#FFF6EC"/><circle cx="206" cy="157" r="5" fill="#F4B6C2"/>'+
+      '<circle cx="206" cy="148.5" r="1.8" fill="#C9B8E8"/><circle cx="214.5" cy="157" r="1.8" fill="#C9B8E8"/><circle cx="206" cy="165.5" r="1.8" fill="#C9B8E8"/><circle cx="197.5" cy="157" r="1.8" fill="#C9B8E8"/></g>'+
+    // body (bubbly cowl)
+    '<path d="M40 146 C30 118 48 100 82 100 L140 100 C153 100 159 109 159 121 L159 132 L186 132 C191 132 194 136 194 141 L194 146 Z" fill="#CDBDEB" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/>'+
+    '<path d="M56 124 C82 115 124 115 148 122" fill="none" stroke="#FFF6EC" stroke-width="6" stroke-linecap="round"/>'+
+    '<path d="M64 132 c0 -4 6 -4 6 0 c0 -4 6 -4 6 0 c0 5 -6 8 -6 8 c0 0 -6 -3 -6 -8z" fill="#F4B6C2" stroke="'+INK+'" stroke-width="1.8"/>'+
+    '<circle cx="39" cy="124" r="5.5" fill="#E58A9E" stroke="'+INK+'" stroke-width="2.4"/><circle cx="37.6" cy="122.6" r="1.6" fill="#fff" opacity=".8"/>'+
     // front column + fender
-    '<path d="M176 140 L188 66 C189 59 195 56 201 58 C207 60 209 66 207 72 L196 140 Z" fill="#B9A6E2" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/>'+
-    '<path d="M181 156 C182 128 230 128 231 156 L222 156 C220 138 192 138 190 156 Z" fill="#CDBDEB" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/>'+
+    '<path d="M176 140 L187 70 C188 62 195 58 202 60 C209 62 211 69 209 76 L197 140 Z" fill="#B9A6E2" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/>'+
+    '<path d="M180 157 C181 129 232 129 233 157 L224 157 C222 139 190 139 189 157 Z" fill="#CDBDEB" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/>'+
+    // mirror
+    '<path d="M205 54 L210 40" stroke="'+INK+'" stroke-width="2.6" stroke-linecap="round"/><circle cx="211" cy="36" r="6" fill="#EEE8F8" stroke="'+INK+'" stroke-width="2.4"/><path d="M209 33.5 q2 -1.5 4 0" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round"/>'+
     // basket
     '<path d="M203 76 L237 76 L233 100 L207 100 Z" fill="#FCE6EA" stroke="'+INK+'" stroke-width="2.8" stroke-linejoin="round"/>'+
-    '<path d="M211 76 L213 100 M220 76 L220 100 M229 76 L227 100 M205 88 L235 88" stroke="'+INK+'" stroke-width="1.6" opacity=".45"/>'+
+    '<path d="M211 76 L213 100 M220 76 L220 100 M229 76 L227 100 M205 88 L235 88" stroke="'+INK+'" stroke-width="1.6" opacity=".4"/>'+
     '<path d="M214 72 c0 -6 8 -6 8 0 c0 -6 8 -6 8 0 c0 7 -8 11 -8 11 c0 0 -8 -4 -8 -11z" fill="#E58A9E" stroke="'+INK+'" stroke-width="2.2" stroke-linejoin="round"/>'+
     // seat
-    '<path d="M66 104 C66 93 72 89 82 89 L134 89 C143 89 147 95 147 104 Z" fill="#E58A9E" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/>'+
+    '<path d="M64 102 C64 91 71 86 83 86 L133 86 C143 86 148 92 148 102 Z" fill="#F4B6C2" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/>'+
+    '<path d="M76 93 L136 93" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-dasharray="3 5" opacity=".8"/>'+
     // cat: tail, body, arm
-    '<path d="M92 90 C74 92 66 78 74 66" fill="none" stroke="'+INK+'" stroke-width="12" stroke-linecap="round"/>'+
-    '<path d="M92 90 C74 92 66 78 74 66" fill="none" stroke="#FFFDF8" stroke-width="6.5" stroke-linecap="round"/>'+
-    '<ellipse cx="110" cy="80" rx="24" ry="19" fill="#FFFDF8" stroke="'+INK+'" stroke-width="3"/>'+
-    '<path d="M124 76 L186 60" stroke="'+INK+'" stroke-width="12" stroke-linecap="round"/>'+
-    '<path d="M124 76 L186 60" stroke="#FFFDF8" stroke-width="6.5" stroke-linecap="round"/>'+
-    // handlebar
+    '<path d="M92 88 C72 92 64 76 72 64" fill="none" stroke="'+INK+'" stroke-width="12" stroke-linecap="round"/>'+
+    '<path d="M92 88 C72 92 64 76 72 64" fill="none" stroke="#FFFDF8" stroke-width="6.5" stroke-linecap="round"/>'+
+    '<ellipse cx="110" cy="80" rx="23" ry="17" fill="#FFFDF8" stroke="'+INK+'" stroke-width="3"/>'+
+    '<path d="M124 76 L185 61" stroke="'+INK+'" stroke-width="12" stroke-linecap="round"/>'+
+    '<path d="M124 76 L185 61" stroke="#FFFDF8" stroke-width="6.5" stroke-linecap="round"/>'+
+    // handlebar + grip + paw
     '<path d="M178 60 L214 52" stroke="'+INK+'" stroke-width="6" stroke-linecap="round"/>'+
-    '<circle cx="187" cy="59" r="7" fill="#FFFDF8" stroke="'+INK+'" stroke-width="2.6"/>'+
-    // ears (behind helmet edge)
-    '<path d="M90 36 L88 10 L110 24 Z" fill="#FFFDF8" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/><path d="M93 29 L92 18 L102 24Z" fill="#F7C3CD"/>'+
-    '<path d="M138 36 L140 10 L118 24 Z" fill="#FFFDF8" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/><path d="M135 29 L136 18 L126 24Z" fill="#F7C3CD"/>'+
+    '<path d="M205 54 L215 51.8" stroke="#E58A9E" stroke-width="7" stroke-linecap="round"/>'+
+    '<circle cx="187" cy="59" r="7.5" fill="#FFFDF8" stroke="'+INK+'" stroke-width="2.6"/>'+
+    '<circle cx="184.5" cy="56.5" r="1.4" fill="#F4B6C2"/><circle cx="188" cy="55.5" r="1.4" fill="#F4B6C2"/><circle cx="190.5" cy="58.5" r="1.4" fill="#F4B6C2"/>'+
     // head
-    '<ellipse cx="114" cy="50" rx="30" ry="25" fill="#FFFDF8" stroke="'+INK+'" stroke-width="3"/>'+
+    '<ellipse cx="114" cy="50" rx="31" ry="26" fill="#FFFDF8" stroke="'+INK+'" stroke-width="3"/>'+
     // helmet
-    '<path d="M83 45 C83 14 145 14 145 45 C126 38 102 38 83 45 Z" fill="#F4B6C2" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/>'+
-    '<path d="M100 22 C108 18 122 18 130 22" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".8"/>'+
+    '<path d="M82 46 C82 12 146 12 146 46 C126 39 102 39 82 46 Z" fill="#F4B6C2" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/>'+
+    '<path d="M96 24 C104 19 118 18 126 21" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".8"/>'+
+    '<path d="M125 30 c0 -3.2 4.6 -3.2 4.6 0 c0 -3.2 4.6 -3.2 4.6 0 c0 4 -4.6 6.4 -4.6 6.4 c0 0 -4.6 -2.4 -4.6 -6.4z" fill="#fff"/>'+
+    // ears (rounded, through the helmet)
+    '<path d="M88 34 C84 21 86 9 93 8 C100 8 107 17 110 24 Z" fill="#FFFDF8" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/><path d="M92 27 C91 20 92 15 95 15 C98 15 102 20 103 23Z" fill="#F7C3CD"/>'+
+    '<path d="M140 34 C144 21 142 9 135 8 C128 8 121 17 118 24 Z" fill="#FFFDF8" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/><path d="M136 27 C137 20 136 15 133 15 C130 15 126 20 125 23Z" fill="#F7C3CD"/>'+
     // face
-    '<path d="M100 56 Q105 50 110 56" fill="none" stroke="'+INK+'" stroke-width="3" stroke-linecap="round"/><path d="M120 56 Q125 50 130 56" fill="none" stroke="'+INK+'" stroke-width="3" stroke-linecap="round"/>'+
-    '<ellipse cx="96" cy="62" rx="6" ry="3.8" fill="#F4B6C2"/><ellipse cx="134" cy="62" rx="6" ry="3.8" fill="#F4B6C2"/>'+
-    '<path d="M110 62 Q112.5 66 115 62 Q117.5 66 120 62" fill="none" stroke="'+INK+'" stroke-width="2.4" stroke-linecap="round"/>'+
+    '<ellipse cx="104" cy="56" rx="4.4" ry="5.4" fill="'+INK+'"/><ellipse cx="125" cy="56" rx="4.4" ry="5.4" fill="'+INK+'"/>'+
+    '<circle cx="105.6" cy="53.8" r="1.8" fill="#fff"/><circle cx="126.6" cy="53.8" r="1.8" fill="#fff"/><circle cx="102.8" cy="58.4" r=".8" fill="#fff"/><circle cx="123.8" cy="58.4" r=".8" fill="#fff"/>'+
+    '<ellipse cx="94" cy="64" rx="6.5" ry="4" fill="#F7A8B8" opacity=".9"/><ellipse cx="135" cy="64" rx="6.5" ry="4" fill="#F7A8B8" opacity=".9"/>'+
+    '<path d="M111.6 61.2 l2.9 2 l2.9 -2" fill="#F4B6C2"/>'+
+    '<path d="M110 64 Q112.3 67.4 114.5 64.4 Q116.7 67.4 119 64" fill="none" stroke="'+INK+'" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>'+
     // scarf
-    '<path d="M92 70 Q114 80 136 70 L135 77 Q114 87 93 77 Z" fill="#E58A9E" stroke="'+INK+'" stroke-width="2.6" stroke-linejoin="round"/>'+
-    '<path d="M95 74 L74 70 L80 84 Z" fill="#E58A9E" stroke="'+INK+'" stroke-width="2.4" stroke-linejoin="round"/>'+
+    '<path d="M91 71 Q114 81 137 71 L136 78 Q114 88 92 78 Z" fill="#E58A9E" stroke="'+INK+'" stroke-width="2.6" stroke-linejoin="round"/>'+
+    '<path d="M94 75 L73 71 L79 85 Z" fill="#E58A9E" stroke="'+INK+'" stroke-width="2.4" stroke-linejoin="round"/>'+
   '</g></svg>';
 }
 function batterySVG(lvl,col){

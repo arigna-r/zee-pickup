@@ -14,11 +14,12 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <style>
+@font-face{font-family:"Huninn";src:url("jf-openhuninn-2.1.ttf") format("truetype");font-display:swap}
 :root{--cream:#FFF8EF;--card:#FFFDF9;--blush:#F4B6C2;--blush-soft:#FCE6EA;--blush-deep:#DC7F94;--lav:#CDBDEB;--lav-soft:#EEE8F8;--lav-deep:#7E6BB8;--butter:#FBE7B5;
   --ink:#4A3A3F;--ink-soft:#76656A;--line:#EEDFD3;--r-lg:26px;--r-md:20px;--r-sm:14px;
   --shadow:0 1px 2px rgba(74,58,63,.06),0 8px 24px -10px rgba(122,88,96,.22);
-  --font:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif;
-  --font-round:ui-rounded,"SF Pro Rounded",-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC",system-ui,sans-serif;--ease:cubic-bezier(.22,.8,.3,1)}
+  --font:"Huninn",-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif;
+  --font-round:"Huninn",ui-rounded,"SF Pro Rounded",-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC",system-ui,sans-serif;--ease:cubic-bezier(.22,.8,.3,1)}
 *{box-sizing:border-box}[hidden]{display:none!important}
 html{background:var(--cream);-webkit-text-size-adjust:100%}
 body{margin:0;color:var(--ink);font-family:var(--font);font-size:17px;line-height:1.6;-webkit-tap-highlight-color:transparent;
@@ -170,16 +171,16 @@ async function topics(code){var d=await crypto.subtle.digest('SHA-256',new TextE
 
 var INK='#4A3A3F';
 function cat(happy){return '<svg viewBox="0 0 140 132" xmlns="http://www.w3.org/2000/svg">'+
-  '<path d="M100 112 C128 114 132 88 118 78" fill="none" stroke="'+INK+'" stroke-width="12" stroke-linecap="round"/><path d="M100 112 C128 114 132 88 118 78" fill="none" stroke="#FFFDF8" stroke-width="6.5" stroke-linecap="round"/>'+
-  '<ellipse cx="69" cy="100" rx="36" ry="24" fill="#FFFDF8" stroke="'+INK+'" stroke-width="3"/>'+
-  '<path d="M30 48 L30 14 L60 30 Z" fill="#FFFDF8" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/><path d="M35 39 L35 24 L49 31 Z" fill="#F7C3CD"/>'+
-  '<path d="M108 48 L108 14 L78 30 Z" fill="#FFFDF8" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/><path d="M103 39 L103 24 L89 31 Z" fill="#F7C3CD"/>'+
-  '<ellipse cx="69" cy="62" rx="44" ry="36" fill="#FFFDF8" stroke="'+INK+'" stroke-width="3"/>'+
-  '<path d="M38 92 Q69 104 100 92 L98 99 Q69 111 40 99Z" fill="#9A88D2" stroke="'+INK+'" stroke-width="2.6" stroke-linejoin="round"/>'+
-  '<ellipse cx="41" cy="72" rx="8" ry="5" fill="#F4B6C2" opacity=".85"/><ellipse cx="97" cy="72" rx="8" ry="5" fill="#F4B6C2" opacity=".85"/>'+
-  (happy?'<path d="M45 63 Q52 54 59 63" fill="none" stroke="'+INK+'" stroke-width="3.2" stroke-linecap="round"/><path d="M79 63 Q86 54 93 63" fill="none" stroke="'+INK+'" stroke-width="3.2" stroke-linecap="round"/>'
-        :'<circle cx="52" cy="61" r="5" fill="'+INK+'"/><circle cx="86" cy="61" r="5" fill="'+INK+'"/><circle cx="53.8" cy="59.2" r="1.7" fill="#fff"/><circle cx="87.8" cy="59.2" r="1.7" fill="#fff"/>')+
-  '<path d="M62 70 Q65.5 75 69 70 Q72.5 75 76 70" fill="none" stroke="'+INK+'" stroke-width="2.6" stroke-linecap="round"/></svg>'}
+  '<path d="M101 113 C127 115 131 90 118 80" fill="none" stroke="'+INK+'" stroke-width="12" stroke-linecap="round"/><path d="M101 113 C127 115 131 90 118 80" fill="none" stroke="#FFFDF8" stroke-width="6.5" stroke-linecap="round"/>'+
+  '<ellipse cx="69" cy="101" rx="34" ry="23" fill="#FFFDF8" stroke="'+INK+'" stroke-width="3"/>'+
+  '<path d="M27 54 C20 32 24 12 35 11 C45 11 56 24 62 33 Z" fill="#FFFDF8" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/><path d="M33 42 C30 30 32 21 37 21 C42 22 48 28 51 33 Z" fill="#F7C3CD"/>'+
+  '<path d="M111 54 C118 32 114 12 103 11 C93 11 82 24 76 33 Z" fill="#FFFDF8" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/><path d="M105 42 C108 30 106 21 101 21 C96 22 90 28 87 33 Z" fill="#F7C3CD"/>'+
+  '<ellipse cx="69" cy="62" rx="45" ry="37" fill="#FFFDF8" stroke="'+INK+'" stroke-width="3"/>'+
+  '<path d="M37 93 Q69 106 101 93 L99 101 Q69 113 39 101Z" fill="#9A88D2" stroke="'+INK+'" stroke-width="2.6" stroke-linejoin="round"/>'+
+  '<ellipse cx="40" cy="73" rx="9" ry="5.5" fill="#F7A8B8" opacity=".85"/><ellipse cx="98" cy="73" rx="9" ry="5.5" fill="#F7A8B8" opacity=".85"/>'+
+  (happy?'<path d="M45 64 Q53 54 61 64" fill="none" stroke="'+INK+'" stroke-width="3.4" stroke-linecap="round"/><path d="M77 64 Q85 54 93 64" fill="none" stroke="'+INK+'" stroke-width="3.4" stroke-linecap="round"/>'
+        :'<ellipse cx="53" cy="61" rx="5.6" ry="6.8" fill="'+INK+'"/><ellipse cx="85" cy="61" rx="5.6" ry="6.8" fill="'+INK+'"/><circle cx="55" cy="58.4" r="2.2" fill="#fff"/><circle cx="87" cy="58.4" r="2.2" fill="#fff"/>')+
+  '<path d="M63 74 Q66 78 69 74.5 Q72 78 75 74" fill="none" stroke="'+INK+'" stroke-width="2.4" stroke-linecap="round"/></svg>'}
 
 var KIND={scooter:['pickup','🛵 要你去接'],house:['self','🏠 自己回家'],thought_balloon:['later','💭 晚點再說']};
 function kindOf(it){var tg=it.tags||[];if(tg[0]==='gift')return ['gift','🎁 想兌換獎勵'];if(tg[0]==='scooter'&&tg.indexOf('books')>=0)return ['pickup','📚 下課要你去接'];return KIND[tg[0]]||['later','💌 新訊息']}
