@@ -568,17 +568,21 @@ function heroSVG(opts){
   '<g'+(anim?' class="bob"':'')+'>'+
     // wheels
     '<g'+(anim?' class="wheel"':'')+'><circle cx="78" cy="157" r="21" fill="'+INK+'"/><circle cx="78" cy="157" r="12" fill="#FFF6EC"/><circle cx="78" cy="157" r="5" fill="#F4B6C2"/>'+
-      '<circle cx="78" cy="148.5" r="1.8" fill="#C9B8E8"/><circle cx="86.5" cy="157" r="1.8" fill="#C9B8E8"/><circle cx="78" cy="165.5" r="1.8" fill="#C9B8E8"/><circle cx="69.5" cy="157" r="1.8" fill="#C9B8E8"/></g>'+
+      '<circle cx="78" cy="148.5" r="1.8" fill="#E58A9E"/><circle cx="86.5" cy="157" r="1.8" fill="#E58A9E"/><circle cx="78" cy="165.5" r="1.8" fill="#E58A9E"/><circle cx="69.5" cy="157" r="1.8" fill="#E58A9E"/></g>'+
     '<g'+(anim?' class="wheel"':'')+'><circle cx="206" cy="157" r="21" fill="'+INK+'"/><circle cx="206" cy="157" r="12" fill="#FFF6EC"/><circle cx="206" cy="157" r="5" fill="#F4B6C2"/>'+
-      '<circle cx="206" cy="148.5" r="1.8" fill="#C9B8E8"/><circle cx="214.5" cy="157" r="1.8" fill="#C9B8E8"/><circle cx="206" cy="165.5" r="1.8" fill="#C9B8E8"/><circle cx="197.5" cy="157" r="1.8" fill="#C9B8E8"/></g>'+
+      '<circle cx="206" cy="148.5" r="1.8" fill="#E58A9E"/><circle cx="214.5" cy="157" r="1.8" fill="#E58A9E"/><circle cx="206" cy="165.5" r="1.8" fill="#E58A9E"/><circle cx="197.5" cy="157" r="1.8" fill="#E58A9E"/></g>'+
     // body (bubbly cowl)
-    '<path d="M40 146 C30 118 48 100 82 100 L140 100 C153 100 159 109 159 121 L159 132 L186 132 C191 132 194 136 194 141 L194 146 Z" fill="#CDBDEB" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/>'+
-    '<path d="M56 124 C82 115 124 115 148 122" fill="none" stroke="#FFF6EC" stroke-width="6" stroke-linecap="round"/>'+
+    '<path d="M40 146 C30 118 48 100 82 100 L140 100 C153 100 159 109 159 121 L159 132 L186 132 C191 132 194 136 194 141 L194 146 Z" fill="#3A3337" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/>'+
+    '<path d="M50 113 C60 105 78 103 100 103" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" opacity=".35"/>'+
+    '<path d="M56 124 C82 115 124 115 148 122" fill="none" stroke="#F4B6C2" stroke-width="4" stroke-linecap="round"/>'+
     '<path d="M64 132 c0 -4 6 -4 6 0 c0 -4 6 -4 6 0 c0 5 -6 8 -6 8 c0 0 -6 -3 -6 -8z" fill="#F4B6C2" stroke="'+INK+'" stroke-width="1.8"/>'+
     '<circle cx="39" cy="124" r="5.5" fill="#E58A9E" stroke="'+INK+'" stroke-width="2.4"/><circle cx="37.6" cy="122.6" r="1.6" fill="#fff" opacity=".8"/>'+
     // front column + fender
-    '<path d="M176 140 L187 70 C188 62 195 58 202 60 C209 62 211 69 209 76 L197 140 Z" fill="#B9A6E2" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/>'+
-    '<path d="M180 157 C181 129 232 129 233 157 L224 157 C222 139 190 139 189 157 Z" fill="#CDBDEB" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/>'+
+    '<path d="M176 140 L187 70 C188 62 195 58 202 60 C209 62 211 69 209 76 L197 140 Z" fill="#2E282C" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/>'+
+    '<path d="M191 84 L185 124" stroke="#fff" stroke-width="2.6" stroke-linecap="round" opacity=".3"/>'+
+    '<path d="M180 157 C181 129 232 129 233 157 L224 157 C222 139 190 139 189 157 Z" fill="#3A3337" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/>'+
+    '<path d="M190 141 C197 135 206 134 214 135" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" opacity=".3"/>'+
+    '<circle cx="198" cy="73" r="6" fill="#FFF3C4" stroke="'+INK+'" stroke-width="2.4"/><circle cx="196.4" cy="71.4" r="1.7" fill="#fff"/>'+
     // mirror
     '<path d="M205 54 L210 40" stroke="'+INK+'" stroke-width="2.6" stroke-linecap="round"/><circle cx="211" cy="36" r="6" fill="#EEE8F8" stroke="'+INK+'" stroke-width="2.4"/><path d="M209 33.5 q2 -1.5 4 0" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round"/>'+
     // basket
@@ -602,9 +606,9 @@ function heroSVG(opts){
     // head
     '<ellipse cx="114" cy="50" rx="31" ry="26" fill="#FFFDF8" stroke="'+INK+'" stroke-width="3"/>'+
     // helmet
-    '<path d="M82 46 C82 12 146 12 146 46 C126 39 102 39 82 46 Z" fill="#F4B6C2" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/>'+
-    '<path d="M96 24 C104 19 118 18 126 21" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".8"/>'+
-    '<path d="M125 30 c0 -3.2 4.6 -3.2 4.6 0 c0 -3.2 4.6 -3.2 4.6 0 c0 4 -4.6 6.4 -4.6 6.4 c0 0 -4.6 -2.4 -4.6 -6.4z" fill="#fff"/>'+
+    '<path d="M82 46 C82 12 146 12 146 46 C126 39 102 39 82 46 Z" fill="#5B565A" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/>'+
+    '<path d="M96 24 C104 19 118 18 126 21" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".4"/>'+
+    '<path d="M125 30 c0 -3.2 4.6 -3.2 4.6 0 c0 -3.2 4.6 -3.2 4.6 0 c0 4 -4.6 6.4 -4.6 6.4 c0 0 -4.6 -2.4 -4.6 -6.4z" fill="#F4B6C2"/>'+
     // ears (rounded, through the helmet)
     '<path d="M88 34 C84 21 86 9 93 8 C100 8 107 17 110 24 Z" fill="#FFFDF8" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/><path d="M92 27 C91 20 92 15 95 15 C98 15 102 20 103 23Z" fill="#F7C3CD"/>'+
     '<path d="M140 34 C144 21 142 9 135 8 C128 8 121 17 118 24 Z" fill="#FFFDF8" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/><path d="M136 27 C137 20 136 15 133 15 C130 15 126 20 125 23Z" fill="#F7C3CD"/>'+
