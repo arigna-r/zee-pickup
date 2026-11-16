@@ -271,7 +271,7 @@ button{cursor:pointer;touch-action:manipulation}
     </div>
     <div class="hero" id="hero" aria-hidden="true"></div>
     <p class="hello">Zee，今天也辛苦啦 ♡</p>
-    <h1 class="ask" id="welcome-q" tabindex="-1">今天下班，<br>要不要我去接妳？🛵</h1>
+    <h1 class="ask" id="welcome-q" tabindex="-1">今天下班／下課後，<br>要不要我去接妳？🛵</h1>
     <div class="choices" role="group" aria-labelledby="welcome-q">
       <button class="choice" type="button" data-choice="pickup" aria-pressed="false"><span class="ci" aria-hidden="true">🛵</span><span>好呀，來接我 ♡</span></button>
       <button class="choice" type="button" data-choice="self" aria-pressed="false"><span class="ci" aria-hidden="true">🏠</span><span>今天自己回家～</span></button>
@@ -294,8 +294,14 @@ button{cursor:pointer;touch-action:manipulation}
     <div class="say"><div class="mini" data-mini-cat="happy" aria-hidden="true"></div>
       <p class="bubble" style="margin:0">好～我去接妳！🛵<br>先跟我說幾個小細節，不想填的都可以跳過喔。</p></div>
 
+    <div class="card q" role="group" aria-labelledby="q-from">
+      <h2 id="q-from">今天是下班還是下課？</h2>
+      <div class="grid2" id="fromTiles"></div>
+    </div>
+
     <div class="card q" role="group" aria-labelledby="q-time">
-      <h2 id="q-time">今天幾點下班呢？</h2>
+      <h2 id="q-time">今天幾點<span data-word>下班</span>呢？</h2>
+      <p class="recent-label" id="timeChipsLabel" hidden></p>
       <div class="chips" id="timeChips"></div>
       <div class="row-time">
         <label class="field time-wrap" id="timeWrap">
@@ -322,7 +328,7 @@ button{cursor:pointer;touch-action:manipulation}
     </div>
 
     <div class="card q" role="group" aria-labelledby="q-act">
-      <h2 id="q-act">下班後想做什麼？<span class="opt">可略過</span></h2>
+      <h2 id="q-act"><span data-word>下班</span>後想做什麼？<span class="opt">可略過</span></h2>
       <div class="grid2" id="activity"></div>
     </div>
 
@@ -409,7 +415,7 @@ button{cursor:pointer;touch-action:manipulation}
     <button class="btn ghost" type="button" id="clearToday">清空今天的選擇</button>
     <button class="btn ghost" type="button" id="clearPlaces">清除之前填過的地點</button>
     <button class="btn primary" type="button" data-close>知道了</button>
-    <p style="margin-top:14px;font-size:12px;text-align:center">版本 1.1</p>
+    <p style="margin-top:14px;font-size:12px;text-align:center">版本 1.2</p>
   </div>
 </div>
 
@@ -471,14 +477,15 @@ var HEAD={
 
 /* ---------- state ---------- */
 var KEY='zee-pickup:day:v1', PKEY='zee-pickup:prefs:v1';
-function fresh(){return {date:todayStr(),choice:null,time:'',timeUnsure:false,place:'',activity:null,snack:'',energy:null,screen:'welcome',customMsg:null}}
+function fresh(){return {date:todayStr(),choice:null,time:'',timeUnsure:false,place:'',activity:null,snack:'',energy:null,from:null,screen:'welcome',customMsg:null}}
 var S, P, newDay=false;
 function load(){
   var saved=store.get(KEY);
   if(saved && saved.date===todayStr()){S=Object.assign(fresh(),saved)}
   else{S=fresh();newDay=!!(saved && saved.choice)}
-  P=Object.assign({recentPlaces:[],hintDismissed:false},store.get(PKEY)||{});
+  P=Object.assign({recentPlaces:[],recentClass:[],lastFrom:null,hintDismissed:false},store.get(PKEY)||{});
   if(!Array.isArray(P.recentPlaces))P.recentPlaces=[];
+  if(!Array.isArray(P.recentClass))P.recentClass=[];
 }
 function save(){store.set(KEY,S)}
 function savePrefs(){store.set(PKEY,P)}
@@ -615,8 +622,9 @@ function buildMsg(){
   if(S.choice==='pickup'){
     p.push('今天想請你來接我 ♡');
     var place=clean(S.place), hasTime=S.time && !S.timeUnsure;
-    if(hasTime) p.push(place ? '大概 '+S.time+' 下班，在'+place+'等你。' : '大概 '+S.time+' 下班。');
-    else p.push(place ? '幾點下班還不確定，確定再跟你說～會在'+place+'等你。' : '幾點下班還不確定，確定再跟你說～');
+    var w=word();
+    if(hasTime) p.push(place ? '大概 '+S.time+' '+w+'，在'+place+'等你。' : '大概 '+S.time+' '+w+'。');
+    else p.push(place ? '幾點'+w+'還不確定，確定再跟你說～會在'+place+'等你。' : '幾點'+w+'還不確定，確定再跟你說～');
     if(S.activity && ACT[S.activity]) p.push(ACT[S.activity].m);
     var snack=clean(S.snack);
     if(snack) p.push('如果方便的話，幫我帶'+snack+'。');
@@ -711,13 +719,31 @@ $$('.choice').forEach(function(b){
 });
 
 /* ---------- details ---------- */
-function buildDetailsOnce(){
-  var tc=$('#timeChips');
-  TIMES.forEach(function(t){var b=document.createElement('button');b.type='button';b.className='chip';b.dataset.time=t;b.textContent=t;b.setAttribute('aria-pressed','false');
+var FROM={work:{e:'💼',t:'下班'},cls:{e:'📚',t:'下課'}};
+function word(){return S&&S.from==='cls'?'下課':'下班'}
+function chipTimes(){return S.from==='cls'?(P.recentClass||[]).slice(0,4):TIMES}
+function buildTimeChips(){
+  var tc=$('#timeChips');tc.innerHTML='';
+  var list=chipTimes();
+  list.forEach(function(t){var b=document.createElement('button');b.type='button';b.className='chip';b.dataset.time=t;b.textContent=t;b.setAttribute('aria-pressed','false');
     b.addEventListener('click',function(){
       if(S.time===t&&!S.timeUnsure){setField('time','')}else{S.timeUnsure=false;setField('time',t)}
       renderTime();
     });tc.appendChild(b)});
+  tc.hidden=!list.length;
+  var lab=$('#timeChipsLabel');
+  if(S.from==='cls'){lab.textContent=list.length?'最近的下課時間':'下課時間每天不一樣～用下面選一下就好';lab.hidden=false}else{lab.hidden=true}
+}
+function renderFrom(){
+  $$('#fromTiles .tile').forEach(function(b){b.setAttribute('aria-pressed',S.from===b.dataset.from?'true':'false')});
+  $$('[data-word]').forEach(function(el){el.textContent=word()});
+  buildTimeChips();renderTime();
+}
+function buildDetailsOnce(){
+  var ft=$('#fromTiles');
+  Object.keys(FROM).forEach(function(k){var b=document.createElement('button');b.type='button';b.className='tile';b.dataset.from=k;b.setAttribute('aria-pressed','false');
+    b.innerHTML='<span class="te" aria-hidden="true">'+FROM[k].e+'</span><span>'+FROM[k].t+'</span>';
+    b.addEventListener('click',function(){if(S.from!==k){setField('from',k);P.lastFrom=k;savePrefs()}renderFrom()});ft.appendChild(b)});
   $('#timeInput').addEventListener('input',function(){var v=this.value||'';S.timeUnsure=false;setField('time',v);renderTime()});
   $('#timeInput').addEventListener('change',function(){var v=this.value||'';S.timeUnsure=false;setField('time',v);renderTime()});
   $('#timeUnsure').addEventListener('click',function(){var on=!S.timeUnsure;S.timeUnsure=on;if(on)S.time='';setField('timeUnsure',on);renderTime()});
@@ -743,6 +769,7 @@ function buildDetailsOnce(){
   $('#toEnergy').addEventListener('click',function(){
     var pl=clean(S.place);
     if(pl){P.recentPlaces=[pl].concat(P.recentPlaces.filter(function(x){return x!==pl})).slice(0,4);savePrefs()}
+    if(S.from==='cls'&&S.time&&!S.timeUnsure){P.recentClass=[S.time].concat(P.recentClass.filter(function(x){return x!==S.time})).slice(0,4);savePrefs()}
     show('energy');
   });
 }
@@ -750,7 +777,7 @@ function splitItems(s){return String(s||'').split(/[、,，]/).map(function(x){r
 function renderTime(){
   $$('#timeChips .chip').forEach(function(b){b.setAttribute('aria-pressed',(!S.timeUnsure&&S.time===b.dataset.time)?'true':'false')});
   var inp=$('#timeInput');
-  var custom=S.time&&TIMES.indexOf(S.time)<0&&!S.timeUnsure;
+  var custom=S.time&&chipTimes().indexOf(S.time)<0&&!S.timeUnsure;
   if(inp.value!==(custom?S.time:''))inp.value=custom?S.time:'';
   $('#timeWrap').classList.toggle('has-value',!!custom);
   $('#timeWrap').classList.toggle('dim',!!S.timeUnsure);
@@ -767,9 +794,10 @@ function renderRecent(){
   wrap.hidden=!list.length;
 }
 function renderDetails(){
+  if(!S.from){S.from=P.lastFrom==='cls'?'cls':'work';save()}
   renderMini();
   $('#placeInput').value=S.place;$('#snackInput').value=S.snack;
-  renderTime();renderActivity();renderIdeas();renderRecent();
+  renderFrom();renderActivity();renderIdeas();renderRecent();
 }
 function renderMini(){$$('[data-mini-cat]').forEach(function(el){if(!el.firstChild)el.innerHTML=catSVG(el.dataset.miniCat)})}
 
@@ -799,16 +827,17 @@ function renderTicket(){
   var rows=[];
   function row(icon,label,val,soft){rows.push('<div class="tk-row"><dt><span aria-hidden="true">'+icon+'</span>'+label+'</dt><dd'+(soft?' class="soft"':'')+'>'+esc(val)+'</dd></div>')}
   if(c==='pickup'){
-    if(S.time&&!S.timeUnsure)row('🕕','下班時間',S.time);else row('🕕','下班時間','還不確定，晚點說',true);
+    var w=word();
+    if(S.time&&!S.timeUnsure)row('🕕',w+'時間',S.time);else row('🕕',w+'時間','還不確定，晚點說',true);
     if(clean(S.place))row('📍','在這裡等',clean(S.place));
-    if(S.activity&&ACT[S.activity])row(ACT[S.activity].e,'下班後',ACT[S.activity].t);
+    if(S.activity&&ACT[S.activity])row(ACT[S.activity].e,w+'後',ACT[S.activity].t);
     if(clean(S.snack))row('🛍️','順便帶',clean(S.snack));
   }
   if(S.energy&&ENERGY[S.energy])row('🔋','今日電力',ENERGY[S.energy].t);
   var body = rows.length ? '<dl class="tk-rows">'+rows.join('')+'</dl>' : '<p class="tk-note">今天也辛苦了，晚點見 ♡</p>';
   var no=todayStr().replace(/-/g,'');
   $('#ticket').innerHTML='<div class="tk-inner">'+
-    '<div class="tk-head"><span class="tk-title">今日下班小卡</span><span class="tk-date">'+dateShort()+'</span></div>'+
+    '<div class="tk-head"><span class="tk-title">今日'+word()+'小卡</span><span class="tk-date">'+dateShort()+'</span></div>'+
     '<div class="tk-hero">'+art+'<div><p class="tk-headline">'+H.h+'</p>'+(H.s?'<p class="tk-sub">'+H.s+'</p>':'')+'</div></div>'+
     '<div class="tk-perf" aria-hidden="true"></div>'+body+
     '<div class="tk-foot"><span>Zee 的下班接送站・No.'+no+'</span><span class="tk-stamp">Zee ♡ Alex</span></div>'+

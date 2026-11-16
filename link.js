@@ -40,10 +40,11 @@
   };
   function payload(S, msg, isUpdate) {
     var h = HEADS[S.choice] || ['heart', '今天的下班小卡'];
+    var cls = S.choice === 'pickup' && S.from === 'cls';
     return {
-      title: (isUpdate ? 'Zee 更新了：' : 'Zee：') + h[1],
+      title: (isUpdate ? 'Zee 更新了：' : 'Zee：') + (cls ? '下課後想請你來接我 ♡' : h[1]),
       message: msg,
-      tags: [h[0]],
+      tags: cls ? [h[0], 'books'] : [h[0]],
       priority: S.choice === 'pickup' ? 4 : 3,
       click: new URL('alex.html', location.href).href
     };

@@ -166,7 +166,7 @@ function cat(happy){return '<svg viewBox="0 0 140 132" xmlns="http://www.w3.org/
   '<path d="M62 70 Q65.5 75 69 70 Q72.5 75 76 70" fill="none" stroke="'+INK+'" stroke-width="2.6" stroke-linecap="round"/></svg>'}
 
 var KIND={scooter:['pickup','🛵 要你去接'],house:['self','🏠 自己回家'],thought_balloon:['later','💭 晚點再說']};
-function kindOf(it){var t=(it.tags||[])[0];return KIND[t]||['later','💌 新訊息']}
+function kindOf(it){var tg=it.tags||[];if(tg[0]==='scooter'&&tg.indexOf('books')>=0)return ['pickup','📚 下課要你去接'];return KIND[tg[0]]||['later','💌 新訊息']}
 function sameDay(a,b){var x=new Date(a),y=new Date(b);return x.toDateString()===y.toDateString()}
 function when(t){var d=new Date(t),now=Date.now(),mins=Math.round((now-t)/60000);
   var day=sameDay(t,now)?'今天':sameDay(t,now-86400000)?'昨天':(d.getMonth()+1)+'/'+d.getDate();
