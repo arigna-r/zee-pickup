@@ -26,7 +26,9 @@
     x ^= x >>> 15; x = Math.imul(x, 2246822519) >>> 0; x ^= x >>> 13;
     return (x >>> 0) % ORDER.length;
   }
+  var FIXED = 'polar'; // one buddy every day (set to '' to rotate daily again)
   function today(d) {
+    if (FIXED) return FIXED;
     d = d || new Date();
     var y = new Date(d.getFullYear(), d.getMonth(), d.getDate() - 1);
     var i = pick(d), j = pick(y);
