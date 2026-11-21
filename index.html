@@ -516,35 +516,34 @@ function checkDay(){
 /* ---------- illustrations (original, inline SVG) ---------- */
 var uid=0;
 var INK='#4A3A3F';
-function kappaSVG(mood,who){
+function penguinSVG(mood,who){
   mood=mood||'default';
-  var G='#86CC94', zee=who!=='alex', tired=mood==='low';
+  var PD='#465A7A', zee=who!=='alex', tired=mood==='low', OR='#F5A65B';
   var eyes, beak, extra='', brows='';
-  var beakBase='<path d="M57 77 C57 70 81 70 81 77 C81 86 57 86 57 77 Z" fill="#F6C25C" stroke="'+INK+'" stroke-width="2.6" stroke-linejoin="round"/><path d="M61 74.4 q5 -2 10 -1" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" opacity=".8"/>';
+  var beakBase='<path d="M58 77 C61 71 77 71 80 77 C77 84 61 84 58 77 Z" fill="'+OR+'" stroke="'+INK+'" stroke-width="2.6" stroke-linejoin="round"/><path d="M62 74.6 q4 -1.6 8 -.8" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" opacity=".7"/>';
   if(mood==='low'){
     eyes='<path d="M45 63 Q53 68 61 63" fill="none" stroke="'+INK+'" stroke-width="3.2" stroke-linecap="round"/><path d="M77 63 Q85 68 93 63" fill="none" stroke="'+INK+'" stroke-width="3.2" stroke-linecap="round"/>';
-    beak=beakBase+'<path d="M61 79 Q64.5 76.5 68 79 Q71.5 81.5 75 79" fill="none" stroke="'+INK+'" stroke-width="2" stroke-linecap="round"/>';
+    beak=beakBase+'<path d="M62 89 Q65.5 86.5 69 89 Q72.5 91.5 76 89" fill="none" stroke="'+INK+'" stroke-width="2" stroke-linecap="round"/>';
     extra='<path d="M118 42 C118 42 112 50 112 54 a6 6 0 0 0 12 0 C124 50 118 42 118 42Z" fill="#CFE6F5" stroke="'+INK+'" stroke-width="2"/>'+
           '<text x="120" y="22" font-size="15" font-weight="700" fill="#9A88D2" font-family="ui-rounded,system-ui">z</text><text x="130" y="10" font-size="11" font-weight="700" fill="#C9B8E8" font-family="ui-rounded,system-ui">z</text>';
   }else if(mood==='high'||mood==='happy'){
     eyes='<path d="M45 65 Q53 55 61 65" fill="none" stroke="'+INK+'" stroke-width="3.4" stroke-linecap="round"/><path d="M77 65 Q85 55 93 65" fill="none" stroke="'+INK+'" stroke-width="3.4" stroke-linecap="round"/>';
-    beak='<path d="M57 75 C57 69 81 69 81 75 L79 77 L59 77 Z" fill="#F6C25C" stroke="'+INK+'" stroke-width="2.6" stroke-linejoin="round"/>'+
-         '<path d="M60 79 L78 79 C77 88 61 88 60 79 Z" fill="#F6C25C" stroke="'+INK+'" stroke-width="2.6" stroke-linejoin="round"/>'+
-         '<path d="M61 77 L77 77 L77 79.5 L61 79.5 Z" fill="#E77E92"/>';
+    beak='<path d="M58 75 C61 70 77 70 80 75 Z" fill="'+OR+'" stroke="'+INK+'" stroke-width="2.6" stroke-linejoin="round"/>'+
+         '<path d="M61 79 L77 79 C75 86 63 86 61 79 Z" fill="'+OR+'" stroke="'+INK+'" stroke-width="2.6" stroke-linejoin="round"/>'+
+         '<path d="M61 76.4 L77 76.4 L77 79.2 L61 79.2 Z" fill="#E77E92"/>';
     if(mood==='high') extra='<path d="M12 34 l3 7 7 3 -7 3 -3 7 -3 -7 -7 -3 7 -3z" fill="#FBE7B5" stroke="'+INK+'" stroke-width="1.6" stroke-linejoin="round"/>'+
           '<path d="M124 24 l2.4 5.6 5.6 2.4 -5.6 2.4 -2.4 5.6 -2.4 -5.6 -5.6 -2.4 5.6 -2.4z" fill="#CDBDEB" stroke="'+INK+'" stroke-width="1.5" stroke-linejoin="round"/>'+
           '<path d="M122 60 c0 -4 6 -4 6 0 c0 -4 6 -4 6 0 c0 5 -6 8 -6 8 c0 0 -6 -3 -6 -8z" fill="#F4B6C2" stroke="'+INK+'" stroke-width="1.5"/>';
   }else{
-    eyes='<ellipse cx="53" cy="62" rx="5.6" ry="6.8" fill="'+INK+'"/><ellipse cx="85" cy="62" rx="5.6" ry="6.8" fill="'+INK+'"/>'+
-         '<circle cx="55" cy="59.4" r="2.2" fill="#fff"/><circle cx="87" cy="59.4" r="2.2" fill="#fff"/><circle cx="51.4" cy="65" r="1" fill="#fff"/><circle cx="83.4" cy="65" r="1" fill="#fff"/>';
-    beak=beakBase+'<path d="M61 78 Q69 83 77 78" fill="none" stroke="'+INK+'" stroke-width="2" stroke-linecap="round"/>';
+    eyes='<ellipse cx="53" cy="63" rx="5.6" ry="6.8" fill="'+INK+'"/><ellipse cx="85" cy="63" rx="5.6" ry="6.8" fill="'+INK+'"/>'+
+         '<circle cx="55" cy="60.4" r="2.2" fill="#fff"/><circle cx="87" cy="60.4" r="2.2" fill="#fff"/><circle cx="51.4" cy="66" r="1" fill="#fff"/><circle cx="83.4" cy="66" r="1" fill="#fff"/>';
+    beak=beakBase+'<path d="M61 77.2 h16" stroke="'+INK+'" stroke-width="1.5" stroke-linecap="round" opacity=".6"/>';
     if(mood==='mid'){
-      brows='<path d="M46 52 L58 54.5 M92 52 L80 54.5" stroke="'+INK+'" stroke-width="2.6" stroke-linecap="round"/>';
+      brows='<path d="M46 53 L58 55.5 M92 53 L80 55.5" stroke="'+INK+'" stroke-width="2.6" stroke-linecap="round"/>';
       extra='<g transform="translate(118 76)"><circle r="9" fill="#FFFDF8" stroke="'+INK+'" stroke-width="2.6"/><path d="M-3 -2 v4 M0 -3 v5 M3 -2 v4" stroke="'+INK+'" stroke-width="1.6" stroke-linecap="round"/></g>';
     }
   }
   var bodyRy = tired? 20:23, bodyCy = tired? 104:101;
-  var hair = zee ? '<path d="M28 56 C16 70 20 88 14 102 C12 110 22 112 26 104 C30 94 30 80 36 68 Z M110 56 C122 70 118 88 124 102 C126 110 116 112 112 104 C108 94 108 80 102 68 Z" fill="#7A5240" stroke="'+INK+'" stroke-width="2.6" stroke-linejoin="round"/>' : '';
   var helmet = zee
     ? '<path d="M23 60 C16 8 122 8 115 60 C96 48 42 48 23 60 Z" fill="#4F78C4" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/>'+
       '<path d="M69 22 C72 30 73 40 72.5 49" fill="none" stroke="#F3F6FF" stroke-width="7" stroke-linecap="round"/>'+
@@ -554,31 +553,28 @@ function kappaSVG(mood,who){
       '<path d="M38 34 C44 26 52 23 58 22" fill="none" stroke="#fff" stroke-width="4.5" stroke-linecap="round" opacity=".4"/>'+
       '<path d="M90 30 c0 -4.4 6.4 -4.4 6.4 0 c0 -4.4 6.4 -4.4 6.4 0 c0 5.4 -6.4 8.8 -6.4 8.8 c0 0 -6.4 -3.4 -6.4 -8.8z" fill="#F4B6C2"/>';
   if(tired) helmet='<g transform="rotate(-7 69 40)">'+helmet+'</g>';
-  var body = zee ? '#86CC94' : '#3A3337';
   return '<svg viewBox="0 0 140 132" xmlns="http://www.w3.org/2000/svg" role="img">'+
     '<ellipse cx="69" cy="127" rx="42" ry="5" fill="'+INK+'" opacity=".08"/>'+
-    // shell peeking out behind
-    '<ellipse cx="69" cy="'+(bodyCy-2)+'" rx="40" ry="'+(bodyRy+4)+'" fill="#B98C58" stroke="'+INK+'" stroke-width="3"/>'+
-    hair+
-    // arms
-    '<ellipse cx="34" cy="'+(bodyCy+2)+'" rx="7" ry="11" fill="'+G+'" stroke="'+INK+'" stroke-width="2.6" transform="rotate(18 34 '+(bodyCy+2)+')"/>'+
-    '<ellipse cx="104" cy="'+(bodyCy+2)+'" rx="7" ry="11" fill="'+G+'" stroke="'+INK+'" stroke-width="2.6" transform="rotate(-18 104 '+(bodyCy+2)+')"/>'+
-    // body (Zee: green with belly plate; Alex: black hoodie)
-    '<ellipse cx="69" cy="'+bodyCy+'" rx="32" ry="'+bodyRy+'" fill="'+body+'" stroke="'+INK+'" stroke-width="3"/>'+
-    (zee ? '<ellipse cx="69" cy="'+(bodyCy+4)+'" rx="18" ry="'+(bodyRy-6)+'" fill="#FBEFD0" stroke="'+INK+'" stroke-width="2"/><path d="M55 '+(bodyCy+1)+' h28 M56 '+(bodyCy+8)+' h26" stroke="#E2C99A" stroke-width="1.8" stroke-linecap="round"/>'
-         : '<path d="M60 '+(bodyCy-14)+' L62 '+(bodyCy-2)+' M78 '+(bodyCy-14)+' L76 '+(bodyCy-2)+'" stroke="#8B8388" stroke-width="2" stroke-linecap="round"/>')+
-    // webbed feet
-    '<path d="M43 121 C43 114 64 113 65 120 L62 125 L58 122 L54 126 L50 122 L46 125 Z" fill="'+G+'" stroke="'+INK+'" stroke-width="2.4" stroke-linejoin="round"/>'+
-    '<path d="M73 120 C74 113 95 114 95 121 L92 125 L88 122 L84 126 L80 122 L76 125 Z" fill="'+G+'" stroke="'+INK+'" stroke-width="2.4" stroke-linejoin="round"/>'+
-    // head
-    '<ellipse cx="69" cy="64" rx="45" ry="36" fill="'+G+'" stroke="'+INK+'" stroke-width="3"/>'+
+    // flippers
+    '<ellipse cx="33" cy="'+(bodyCy-2)+'" rx="7.5" ry="15" fill="'+PD+'" stroke="'+INK+'" stroke-width="2.6" transform="rotate(24 33 '+(bodyCy-2)+')"/>'+
+    '<ellipse cx="105" cy="'+(bodyCy-2)+'" rx="7.5" ry="15" fill="'+PD+'" stroke="'+INK+'" stroke-width="2.6" transform="rotate(-24 105 '+(bodyCy-2)+')"/>'+
+    // body + white tummy
+    '<ellipse cx="69" cy="'+bodyCy+'" rx="33" ry="'+bodyRy+'" fill="'+PD+'" stroke="'+INK+'" stroke-width="3"/>'+
+    '<ellipse cx="69" cy="'+(bodyCy+3)+'" rx="22" ry="'+(bodyRy-4)+'" fill="#FFFDF8"/>'+
+    // orange feet
+    '<path d="M44 121 C45 114 62 113 64 120 C58 125 50 125 44 121 Z" fill="'+OR+'" stroke="'+INK+'" stroke-width="2.4" stroke-linejoin="round"/>'+
+    '<path d="M74 120 C76 113 93 114 94 121 C88 125 80 125 74 120 Z" fill="'+OR+'" stroke="'+INK+'" stroke-width="2.4" stroke-linejoin="round"/>'+
+    // head + white face
+    '<ellipse cx="69" cy="64" rx="45" ry="36" fill="'+PD+'" stroke="'+INK+'" stroke-width="3"/>'+
+    '<path d="M34 70 C32 54 50 48 69 56 C88 48 106 54 104 70 C102 88 86 96 69 96 C52 96 36 88 34 70 Z" fill="#FFFDF8"/>'+
     helmet+
-    '<ellipse cx="38" cy="75" rx="8" ry="5" fill="#F7A8B8" opacity=".9"/><ellipse cx="100" cy="75" rx="8" ry="5" fill="#F7A8B8" opacity=".9"/>'+
+    '<ellipse cx="40" cy="76" rx="7.5" ry="4.8" fill="#F7A8B8" opacity=".9"/><ellipse cx="98" cy="76" rx="7.5" ry="4.8" fill="#F7A8B8" opacity=".9"/>'+
     brows+eyes+beak+extra+
   '</svg>';
 }
-function catSVG(mood){return kappaSVG(mood,"zee")}
+function catSVG(mood){return penguinSVG(mood,"zee")}
 function heroSVG(opts){
+  var PD='#465A7A';
   opts=opts||{};
   var anim=opts.animate!==false;
   return '<svg viewBox="0 0 270 196" xmlns="http://www.w3.org/2000/svg" role="img">'+
@@ -614,63 +610,51 @@ function heroSVG(opts){
     // seat
     '<path d="M64 102 C64 91 71 86 83 86 L133 86 C143 86 148 92 148 102 Z" fill="#F4B6C2" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/>'+
     '<path d="M76 93 L136 93" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-dasharray="3 5" opacity=".8"/>'+
-    // ---- riders: a 河童 couple — Zee behind, Alex driving ----
-    // kappa long brown hair (Zee) + shell
-    '<path d="M64 48 C54 56 56 66 52 76 C50 82 56 86 60 82 C62 76 66 70 66 60 Z" fill="#7A5240" stroke="'+INK+'" stroke-width="2.6" stroke-linejoin="round"/>'+
-    '<ellipse cx="71" cy="80" rx="13" ry="17" fill="#B98C58" stroke="'+INK+'" stroke-width="3"/>'+
-    '<ellipse cx="71" cy="80" rx="9" ry="12.5" fill="#D8B27A"/>'+
-    '<path d="M67 70 L75 70 L78 77 L75 84 L67 84 L64 77 Z" fill="none" stroke="#9A7046" stroke-width="1.6" stroke-linejoin="round"/>'+
-    '<path d="M67 70 L64 64 M75 70 L78 64 M78 77 L83 77 M64 77 L60 77 M67 84 L64 91 M75 84 L78 91" stroke="#9A7046" stroke-width="1.6" stroke-linecap="round"/>'+
-    // kappa leg + webbed foot
-    '<path d="M94 92 C97 100 99 105 104 109" fill="none" stroke="'+INK+'" stroke-width="10" stroke-linecap="round"/><path d="M94 92 C97 100 99 105 104 109" fill="none" stroke="#86CC94" stroke-width="5" stroke-linecap="round"/>'+
-    '<path d="M100 108 C102 104 112 104 114 108 L112 113 L109 110 L107 114 L104 110 L101 113 Z" fill="#86CC94" stroke="'+INK+'" stroke-width="2.2" stroke-linejoin="round"/>'+
-    // kappa body + belly plate
-    '<ellipse cx="89" cy="80" rx="17" ry="15" fill="#86CC94" stroke="'+INK+'" stroke-width="3"/>'+
-    '<ellipse cx="92" cy="83" rx="9" ry="9.5" fill="#FBEFD0" stroke="'+INK+'" stroke-width="1.8"/>'+
-    '<path d="M84 80 h16 M84.5 85.5 h15" stroke="#E2C99A" stroke-width="1.6" stroke-linecap="round"/>'+
-    // Alex kappa: leg + webbed foot
-    '<path d="M128 90 C140 98 152 112 162 124" fill="none" stroke="'+INK+'" stroke-width="13" stroke-linecap="round"/><path d="M128 90 C140 98 152 112 162 124" fill="none" stroke="#3A3337" stroke-width="8" stroke-linecap="round"/>'+
-    '<path d="M155 128 C154 119 170 117 176 125 L174 129 L170 126 L167 130 L163 127 L159 130 Z" fill="#86CC94" stroke="'+INK+'" stroke-width="2.4" stroke-linejoin="round"/>'+
-    // Alex body (black hoodie) + shell edge
-    '<ellipse cx="124" cy="78" rx="20" ry="17" fill="#3A3337" stroke="'+INK+'" stroke-width="3"/>'+
-    '<path d="M112 70 C118 66 126 65 132 67" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" opacity=".25"/>'+
-    // kappa hug arm + webbed hand
-    '<path d="M98 76 C108 84 118 86 125 84" fill="none" stroke="'+INK+'" stroke-width="10" stroke-linecap="round"/><path d="M98 76 C108 84 118 86 125 84" fill="none" stroke="#86CC94" stroke-width="5" stroke-linecap="round"/>'+
-    '<path d="M124 79 C130 78 133 81 132 84 C133 87 130 89 127 88 C124 89 122 86 123 84 Z" fill="#86CC94" stroke="'+INK+'" stroke-width="2.2" stroke-linejoin="round"/>'+
-    // Alex arm to handlebar
+    // ---- riders: a penguin couple — Zee behind, Alex driving ----
+    // Zee: little leg + orange foot
+    '<path d="M95 92 C98 99 100 104 104 108" fill="none" stroke="'+INK+'" stroke-width="10" stroke-linecap="round"/><path d="M95 92 C98 99 100 104 104 108" fill="none" stroke="'+PD+'" stroke-width="5" stroke-linecap="round"/>'+
+    '<path d="M99 109 C100 104 112 104 114 109 C110 112 103 112 99 109 Z" fill="#F5A65B" stroke="'+INK+'" stroke-width="2.2" stroke-linejoin="round"/>'+
+    // Zee body + white tummy
+    '<ellipse cx="88" cy="80" rx="18" ry="15.5" fill="'+PD+'" stroke="'+INK+'" stroke-width="3"/>'+
+    '<ellipse cx="93" cy="83" rx="10.5" ry="11" fill="#FFFDF8"/>'+
+    // Alex: leg + orange foot
+    '<path d="M128 90 C140 98 152 112 162 124" fill="none" stroke="'+INK+'" stroke-width="13" stroke-linecap="round"/><path d="M128 90 C140 98 152 112 162 124" fill="none" stroke="'+PD+'" stroke-width="8" stroke-linecap="round"/>'+
+    '<path d="M155 127 C155 119 172 118 177 126 C171 130 161 130 155 127 Z" fill="#F5A65B" stroke="'+INK+'" stroke-width="2.4" stroke-linejoin="round"/>'+
+    // Alex body + white tummy
+    '<ellipse cx="124" cy="78" rx="20" ry="17" fill="'+PD+'" stroke="'+INK+'" stroke-width="3"/>'+
+    '<ellipse cx="131" cy="82" rx="11" ry="12" fill="#FFFDF8"/>'+
+    // Zee hugging flipper
+    '<path d="M99 75 C108 83 117 86 125 84" fill="none" stroke="'+INK+'" stroke-width="11" stroke-linecap="round"/><path d="M99 75 C108 83 117 86 125 84" fill="none" stroke="'+PD+'" stroke-width="6" stroke-linecap="round"/>'+
+    // Alex flipper to handlebar
     '<path d="M134 72 L183 61" stroke="'+INK+'" stroke-width="12" stroke-linecap="round"/>'+
-    '<path d="M134 72 L183 61" stroke="#3A3337" stroke-width="6.5" stroke-linecap="round"/>'+
-    // handlebar + grip + webbed hand
+    '<path d="M134 72 L183 61" stroke="'+PD+'" stroke-width="6.5" stroke-linecap="round"/>'+
+    // handlebar + grip + flipper tip
     '<path d="M178 60 L214 52" stroke="'+INK+'" stroke-width="6" stroke-linecap="round"/>'+
     '<path d="M205 54 L215 51.8" stroke="#E58A9E" stroke-width="7" stroke-linecap="round"/>'+
-    '<path d="M181 54 C187 51 194 53 194 58 C196 61 193 65 189 64 C186 67 181 65 181 62 C178 60 178 56 181 54 Z" fill="#86CC94" stroke="'+INK+'" stroke-width="2.4" stroke-linejoin="round"/>'+
-    // kappa head
-    '<ellipse cx="83" cy="54" rx="23" ry="21" fill="#86CC94" stroke="'+INK+'" stroke-width="3"/>'+
-    // Zee: bangs under a blue helmet + flower sticker
-    '<path d="M60 50 C57 33 69 26 83 26 C97 26 108 33 106 50 Q104 43 99 45 Q96 39 91 43 Q88 37 83 41 Q78 37 75 43 Q70 39 67 45 Q62 43 60 50 Z" fill="#7A5240" stroke="'+INK+'" stroke-width="2.6" stroke-linejoin="round"/>'+
+    '<ellipse cx="187" cy="59" rx="7.5" ry="6" fill="'+PD+'" stroke="'+INK+'" stroke-width="2.6" transform="rotate(-14 187 59)"/>'+
+    // Zee head + white face + blue helmet + flower
+    '<ellipse cx="83" cy="54" rx="23" ry="21" fill="'+PD+'" stroke="'+INK+'" stroke-width="3"/>'+
+    '<path d="M65 58 C64 47 75 44 83 49 C91 44 103 47 102 58 C101 70 92 74 83 74 C74 74 66 70 65 58 Z" fill="#FFFDF8"/>'+
     '<path d="M58 51 C54 15 111 13 108 47 C92 40 73 41 58 51 Z" fill="#4F78C4" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/>'+
     '<path d="M84.5 26.5 C87.5 31 89 36.5 89 41.5" fill="none" stroke="#F3F6FF" stroke-width="5.5" stroke-linecap="round"/>'+
     '<path d="M66 27 C70 22 76 20 80 20" fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round" opacity=".45"/>'+
     '<g transform="translate(101 31)"><circle r="3.4" cx="0" cy="-3.8" fill="#F7B8C6"/><circle r="3.4" cx="3.6" cy="-1" fill="#F7B8C6"/><circle r="3.4" cx="2.2" cy="3.2" fill="#F7B8C6"/><circle r="3.4" cx="-2.2" cy="3.2" fill="#F7B8C6"/><circle r="3.4" cx="-3.6" cy="-1" fill="#F7B8C6"/><circle r="2" fill="#FBE7B5"/></g>'+
-    // kappa face: happy closed eyes, blush, round beak with smile
-    '<path d="M70 56 q4 -4.6 8 0 M88 56 q4 -4.6 8 0" fill="none" stroke="'+INK+'" stroke-width="2.5" stroke-linecap="round"/>'+
-    '<ellipse cx="68" cy="63" rx="5" ry="3.2" fill="#F7A8B8" opacity=".95"/><ellipse cx="98" cy="63" rx="5" ry="3.2" fill="#F7A8B8" opacity=".95"/>'+
-    '<path d="M76 62.5 C76 58 91 58 91 62.5 C91 68.5 76 68.5 76 62.5 Z" fill="#F6C25C" stroke="'+INK+'" stroke-width="2.2" stroke-linejoin="round"/>'+
-    '<path d="M78.5 63 Q83.5 66.5 88.5 63" fill="none" stroke="'+INK+'" stroke-width="1.6" stroke-linecap="round"/>'+
-    '<path d="M79 60.6 q3 -1.4 6 -.6" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round" opacity=".8"/>'+
-    // Alex kappa head
-    '<ellipse cx="133" cy="47" rx="26" ry="23" fill="#86CC94" stroke="'+INK+'" stroke-width="3"/>'+
-    // dark gray helmet
+    // Zee face: happy closed eyes, blush, little beak
+    '<path d="M71 57 q4 -4.6 8 0 M88 57 q4 -4.6 8 0" fill="none" stroke="'+INK+'" stroke-width="2.5" stroke-linecap="round"/>'+
+    '<ellipse cx="70" cy="64" rx="4.6" ry="3" fill="#F7A8B8" opacity=".95"/><ellipse cx="97" cy="64" rx="4.6" ry="3" fill="#F7A8B8" opacity=".95"/>'+
+    '<path d="M78.5 62.5 C80.5 59.5 87.5 59.5 89.5 62.5 C87.5 66.5 80.5 66.5 78.5 62.5 Z" fill="#F5A65B" stroke="'+INK+'" stroke-width="2" stroke-linejoin="round"/>'+
+    // Alex head + white face + dark gray helmet
+    '<ellipse cx="133" cy="47" rx="26" ry="23" fill="'+PD+'" stroke="'+INK+'" stroke-width="3"/>'+
+    '<path d="M118 53 C117 42 129 39 138 44 C146 39 159 42 158 53 C157 65 148 69 138 69 C127 69 119 65 118 53 Z" fill="#FFFDF8"/>'+
     '<path d="M105 43 C102 9 163 7 161 39 C144 32 124 33 105 43 Z" fill="#5B565A" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/>'+
     '<path d="M116 20 C124 15 138 14 146 17" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".4"/>'+
     '<path d="M141 26 c0 -3.2 4.6 -3.2 4.6 0 c0 -3.2 4.6 -3.2 4.6 0 c0 4 -4.6 6.4 -4.6 6.4 c0 0 -4.6 -2.4 -4.6 -6.4z" fill="#F4B6C2"/>'+
-    // Alex face: big shiny eyes, blush, beak with a grin
-    '<ellipse cx="129" cy="54" rx="4.8" ry="5.8" fill="'+INK+'"/><ellipse cx="147" cy="53" rx="4.6" ry="5.6" fill="'+INK+'"/>'+
-    '<circle cx="130.6" cy="51.6" r="2" fill="#fff"/><circle cx="148.5" cy="50.6" r="1.9" fill="#fff"/><circle cx="127.8" cy="56.8" r=".9" fill="#fff"/><circle cx="145.8" cy="55.8" r=".9" fill="#fff"/>'+
-    '<ellipse cx="119" cy="61" rx="5.2" ry="3.3" fill="#F7A8B8" opacity=".95"/><ellipse cx="156" cy="60" rx="4.6" ry="3" fill="#F7A8B8" opacity=".95"/>'+
-    '<path d="M131 63.5 C131 59 147 58.5 148 63 C149 69 131 69.5 131 63.5 Z" fill="#F6C25C" stroke="'+INK+'" stroke-width="2.2" stroke-linejoin="round"/>'+
-    '<path d="M133.5 64 Q139.5 68 145.5 63.5" fill="none" stroke="'+INK+'" stroke-width="1.6" stroke-linecap="round"/>'+
-    '<path d="M134 61.4 q3 -1.4 6 -.7" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round" opacity=".8"/>'+
+    // Alex face: big shiny eyes, blush, little beak
+    '<ellipse cx="129" cy="53" rx="4.6" ry="5.6" fill="'+INK+'"/><ellipse cx="147" cy="52" rx="4.4" ry="5.4" fill="'+INK+'"/>'+
+    '<circle cx="130.6" cy="50.8" r="1.9" fill="#fff"/><circle cx="148.4" cy="49.8" r="1.8" fill="#fff"/><circle cx="127.9" cy="55.8" r=".9" fill="#fff"/><circle cx="145.9" cy="54.8" r=".9" fill="#fff"/>'+
+    '<ellipse cx="121" cy="60" rx="4.8" ry="3.1" fill="#F7A8B8" opacity=".95"/><ellipse cx="155" cy="59" rx="4.4" ry="2.9" fill="#F7A8B8" opacity=".95"/>'+
+    '<path d="M132 60.5 C134.5 57 143.5 57 146 60.5 C143.5 65 134.5 65 132 60.5 Z" fill="#F5A65B" stroke="'+INK+'" stroke-width="2" stroke-linejoin="round"/>'+
+    '<path d="M133.5 60.7 h11" stroke="'+INK+'" stroke-width="1.3" stroke-linecap="round" opacity=".6"/>'+
     // little hearts between them
     '<path d="M104 8 c0 -3.6 5 -3.6 5 0 c0 -3.6 5 -3.6 5 0 c0 4.4 -5 7 -5 7 c0 0 -5 -2.6 -5 -7z" fill="#E58A9E" stroke="'+INK+'" stroke-width="1.8" stroke-linejoin="round"/>'+
     '<path d="M93 13 c0 -2.4 3.4 -2.4 3.4 0 c0 -2.4 3.4 -2.4 3.4 0 c0 3 -3.4 4.7 -3.4 4.7 c0 0 -3.4 -1.7 -3.4 -4.7z" fill="#F4B6C2"/>'+
@@ -891,7 +875,7 @@ function renderEnergy(changed){
   $('#energyBubble').textContent=ENERGY_BUBBLE[S.choice]||'';
   var cat=$('#energyCat');cat.innerHTML=catSVG(S.energy||'default');
   if(changed){cat.classList.remove('pop');void cat.offsetWidth;cat.classList.add('pop')}
-  $('#moodLine').textContent=S.energy?ENERGY[S.energy].line:'點一下，看看小河童的表情會怎麼變～';
+  $('#moodLine').textContent=S.energy?ENERGY[S.energy].line:'點一下，看看小企鵝的表情會怎麼變～';
   $$('#energyOpts .energy-opt').forEach(function(b){b.setAttribute('aria-pressed',S.energy===b.dataset.energy?'true':'false')});
   $('#toSummary').textContent=S.energy?'做成今日小卡 ✨':'略過，直接做小卡';
 }

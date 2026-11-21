@@ -44,7 +44,11 @@
     '@keyframes zstamp{0%{transform:scale(1.7);opacity:0}60%{transform:scale(.9);opacity:1}100%{transform:scale(1)}}',
     '.rewards{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}',
     '.sheet .chip[aria-pressed="true"]{background:var(--blush-soft);border-color:var(--blush-deep);color:#8E3E52}',
-    '.xstatus{min-height:1.4em;margin:10px 0 0;font-size:14.5px;color:#4E3F86}'
+    '.xstatus{min-height:1.4em;margin:10px 0 0;font-size:14.5px;color:#4E3F86}',
+    '.forgot{margin:2px 0 18px;padding:14px 14px 12px;border-radius:16px;background:#FFF5F7;border:1.5px dashed #F1C9D2}',
+    '.forgot p{margin:0 0 10px;font-size:14.5px;line-height:1.5}',
+    '.days{display:flex;flex-wrap:wrap;gap:8px}',
+    '.days .chip{min-height:40px}'
   ].join('\n');
   document.head.appendChild(st);
 
@@ -209,6 +213,7 @@
       body += '<p style="text-align:center">還差 ' + (10 - X.stamps.length) + ' 個章就集滿囉～</p>';
     }
     if (X.cards) body += '<p style="text-align:center;font-size:13px">已經集滿過 ' + X.cards + ' 張卡了 ✨</p>';
+    body += forgotHTML();
     body += '<button class="btn ghost" type="button" data-close>關起來</button></div>';
     sheet.innerHTML = body;
     newIdx = -1;
@@ -217,6 +222,46 @@
     var b = e.target.closest('[data-rw]');
     if (b) { picked = +b.dataset.rw; renderSheet(); return; }
     if (e.target.closest('#redeemBtn')) redeem();
+  });
+  /* forgot to stamp: tap a recent day to add (or remove) its stamp */
+  var WD = '日一二三四五六';
+  function hasStamp(d) { return X.stamps.indexOf(d) >= 0 || X.next.indexOf(d) >= 0; }
+  function forgotHTML() {
+    var now = new Date(), chips = '';
+    for (var i = 0; i < 7; i++) {
+      var dt = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i), d = today(dt), on = hasStamp(d);
+      var label = i === 0 ? '今天' : i === 1 ? '昨天' : (dt.getMonth() + 1) + '/' + dt.getDate() + '（' + WD[dt.getDay()] + '）';
+      chips += '<button class="chip small" type="button" data-fd="' + d + '" aria-pressed="' + on + '">' + (on ? '🐾 ' : '') + label + '</button>';
+    }
+    return '<div class="forgot"><p><b>忘記蓋章了嗎？</b><br>那天有請 Alex 接，點一下就能補蓋～點錯了再點一次就取消。</p><div class="days" role="group" aria-label="補蓋最近 7 天的章">' + chips + '</div></div>';
+  }
+  function toggleDay(d) {
+    var i = X.stamps.indexOf(d), j = X.next.indexOf(d), added = false;
+    if (i >= 0) { X.stamps.splice(i, 1); if (X.next.length) X.stamps.push(X.next.shift()); }
+    else if (j >= 0) X.next.splice(j, 1);
+    else { added = true; if (X.stamps.length < 10) X.stamps.push(d); else X.next.push(d); }
+    X.stamps.sort(); X.next.sort();
+    if (added) newIdx = X.stamps.indexOf(d);
+    saveX(); renderPill(); renderSheet();
+    Z.toast(added ? '🐾 補蓋好了！集點卡 ' + X.stamps.length + '/10' : '已經把那天的章拿掉了');
+    syncStamps();
+  }
+  var syncT = null;
+  function syncStamps() {
+    clearTimeout(syncT);
+    syncT = setTimeout(async function () {
+      var L = window.__zeeLink;
+      if (!L || !L.paired() || navigator.onLine === false) return;
+      try {
+        var t = await L.topics();
+        await fetch(L.NTFY + '/', { method: 'POST', body: JSON.stringify({ topic: t.ans, title: 'Zee 的集點卡 🐾',
+          message: '集點卡更新：現在 ' + X.stamps.length + '/10', tags: ['paw_prints', 'stamps-' + X.stamps.length], priority: 1 }) });
+      } catch (e) {}
+    }, 2500);
+  }
+  sheet.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-fd]');
+    if (b) toggleDay(b.dataset.fd);
   });
   function openSheet() { renderSheet(); Z.openOverlay('stampSheet'); }
   async function redeem() {
