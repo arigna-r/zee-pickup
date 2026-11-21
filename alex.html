@@ -31,6 +31,7 @@ button,input{font:inherit;color:inherit}button{cursor:pointer;touch-action:manip
 header{display:flex;align-items:center;gap:12px;margin-bottom:14px}
 header .cat{width:54px;flex:none}header .cat svg{display:block;width:100%;height:auto}
 header h1{margin:0;font-size:22px;line-height:1.3}
+.pill.stamps{margin-left:6px;color:#8E3E52;background:#FCE6EA;border-color:transparent;font-weight:700}
 .pill{display:inline-flex;align-items:center;gap:6px;margin-top:3px;padding:2px 10px;border-radius:999px;background:rgba(255,253,249,.85);border:1px solid var(--line);font-size:13px;color:var(--ink-soft);font-family:var(--font-round)}
 .pill i{width:8px;height:8px;border-radius:50%;background:#8CC9A4;display:inline-block}
 .pill.off i{background:#C9B8C0}
@@ -93,6 +94,7 @@ code.k{display:block;margin-top:8px;padding:10px 12px;border-radius:12px;backgro
     <div>
       <h1>Alex 的接送收件匣</h1>
       <span class="pill" id="live"><i></i><span id="liveText">連線中…</span></span>
+      <span class="pill stamps" id="stampsA" hidden></span>
     </div>
   </header>
 
@@ -170,17 +172,68 @@ async function topics(code){var d=await crypto.subtle.digest('SHA-256',new TextE
   var h=Array.prototype.map.call(new Uint8Array(d),function(x){return x.toString(16).padStart(2,'0')}).join('');return {ans:'zp_'+h.slice(0,28),rep:'zp_'+h.slice(28,56),nts:'zp_'+h.slice(56)+h.slice(0,20)}}
 
 var INK='#4A3A3F';
-function cat(happy){return '<svg viewBox="0 0 140 132" xmlns="http://www.w3.org/2000/svg">'+
-  '<path d="M101 113 C127 115 131 90 118 80" fill="none" stroke="'+INK+'" stroke-width="12" stroke-linecap="round"/><path d="M101 113 C127 115 131 90 118 80" fill="none" stroke="#FFFDF8" stroke-width="6.5" stroke-linecap="round"/>'+
-  '<ellipse cx="69" cy="101" rx="34" ry="23" fill="#FFFDF8" stroke="'+INK+'" stroke-width="3"/>'+
-  '<path d="M27 54 C20 32 24 12 35 11 C45 11 56 24 62 33 Z" fill="#FFFDF8" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/><path d="M33 42 C30 30 32 21 37 21 C42 22 48 28 51 33 Z" fill="#F7C3CD"/>'+
-  '<path d="M111 54 C118 32 114 12 103 11 C93 11 82 24 76 33 Z" fill="#FFFDF8" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/><path d="M105 42 C108 30 106 21 101 21 C96 22 90 28 87 33 Z" fill="#F7C3CD"/>'+
-  '<ellipse cx="69" cy="62" rx="45" ry="37" fill="#FFFDF8" stroke="'+INK+'" stroke-width="3"/>'+
-  '<path d="M37 93 Q69 106 101 93 L99 101 Q69 113 39 101Z" fill="#9A88D2" stroke="'+INK+'" stroke-width="2.6" stroke-linejoin="round"/>'+
-  '<ellipse cx="40" cy="73" rx="9" ry="5.5" fill="#F7A8B8" opacity=".85"/><ellipse cx="98" cy="73" rx="9" ry="5.5" fill="#F7A8B8" opacity=".85"/>'+
-  (happy?'<path d="M45 64 Q53 54 61 64" fill="none" stroke="'+INK+'" stroke-width="3.4" stroke-linecap="round"/><path d="M77 64 Q85 54 93 64" fill="none" stroke="'+INK+'" stroke-width="3.4" stroke-linecap="round"/>'
-        :'<ellipse cx="53" cy="61" rx="5.6" ry="6.8" fill="'+INK+'"/><ellipse cx="85" cy="61" rx="5.6" ry="6.8" fill="'+INK+'"/><circle cx="55" cy="58.4" r="2.2" fill="#fff"/><circle cx="87" cy="58.4" r="2.2" fill="#fff"/>')+
-  '<path d="M63 74 Q66 78 69 74.5 Q72 78 75 74" fill="none" stroke="'+INK+'" stroke-width="2.4" stroke-linecap="round"/></svg>'}
+function kappaSVG(mood,who){
+  mood=mood||'default';
+  var G='#86CC94', zee=who!=='alex', tired=mood==='low';
+  var eyes, beak, extra='', brows='';
+  var beakBase='<path d="M57 77 C57 70 81 70 81 77 C81 86 57 86 57 77 Z" fill="#F6C25C" stroke="'+INK+'" stroke-width="2.6" stroke-linejoin="round"/><path d="M61 74.4 q5 -2 10 -1" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" opacity=".8"/>';
+  if(mood==='low'){
+    eyes='<path d="M45 63 Q53 68 61 63" fill="none" stroke="'+INK+'" stroke-width="3.2" stroke-linecap="round"/><path d="M77 63 Q85 68 93 63" fill="none" stroke="'+INK+'" stroke-width="3.2" stroke-linecap="round"/>';
+    beak=beakBase+'<path d="M61 79 Q64.5 76.5 68 79 Q71.5 81.5 75 79" fill="none" stroke="'+INK+'" stroke-width="2" stroke-linecap="round"/>';
+    extra='<path d="M118 42 C118 42 112 50 112 54 a6 6 0 0 0 12 0 C124 50 118 42 118 42Z" fill="#CFE6F5" stroke="'+INK+'" stroke-width="2"/>'+
+          '<text x="120" y="22" font-size="15" font-weight="700" fill="#9A88D2" font-family="ui-rounded,system-ui">z</text><text x="130" y="10" font-size="11" font-weight="700" fill="#C9B8E8" font-family="ui-rounded,system-ui">z</text>';
+  }else if(mood==='high'||mood==='happy'){
+    eyes='<path d="M45 65 Q53 55 61 65" fill="none" stroke="'+INK+'" stroke-width="3.4" stroke-linecap="round"/><path d="M77 65 Q85 55 93 65" fill="none" stroke="'+INK+'" stroke-width="3.4" stroke-linecap="round"/>';
+    beak='<path d="M57 75 C57 69 81 69 81 75 L79 77 L59 77 Z" fill="#F6C25C" stroke="'+INK+'" stroke-width="2.6" stroke-linejoin="round"/>'+
+         '<path d="M60 79 L78 79 C77 88 61 88 60 79 Z" fill="#F6C25C" stroke="'+INK+'" stroke-width="2.6" stroke-linejoin="round"/>'+
+         '<path d="M61 77 L77 77 L77 79.5 L61 79.5 Z" fill="#E77E92"/>';
+    if(mood==='high') extra='<path d="M12 34 l3 7 7 3 -7 3 -3 7 -3 -7 -7 -3 7 -3z" fill="#FBE7B5" stroke="'+INK+'" stroke-width="1.6" stroke-linejoin="round"/>'+
+          '<path d="M124 24 l2.4 5.6 5.6 2.4 -5.6 2.4 -2.4 5.6 -2.4 -5.6 -5.6 -2.4 5.6 -2.4z" fill="#CDBDEB" stroke="'+INK+'" stroke-width="1.5" stroke-linejoin="round"/>'+
+          '<path d="M122 60 c0 -4 6 -4 6 0 c0 -4 6 -4 6 0 c0 5 -6 8 -6 8 c0 0 -6 -3 -6 -8z" fill="#F4B6C2" stroke="'+INK+'" stroke-width="1.5"/>';
+  }else{
+    eyes='<ellipse cx="53" cy="62" rx="5.6" ry="6.8" fill="'+INK+'"/><ellipse cx="85" cy="62" rx="5.6" ry="6.8" fill="'+INK+'"/>'+
+         '<circle cx="55" cy="59.4" r="2.2" fill="#fff"/><circle cx="87" cy="59.4" r="2.2" fill="#fff"/><circle cx="51.4" cy="65" r="1" fill="#fff"/><circle cx="83.4" cy="65" r="1" fill="#fff"/>';
+    beak=beakBase+'<path d="M61 78 Q69 83 77 78" fill="none" stroke="'+INK+'" stroke-width="2" stroke-linecap="round"/>';
+    if(mood==='mid'){
+      brows='<path d="M46 52 L58 54.5 M92 52 L80 54.5" stroke="'+INK+'" stroke-width="2.6" stroke-linecap="round"/>';
+      extra='<g transform="translate(118 76)"><circle r="9" fill="#FFFDF8" stroke="'+INK+'" stroke-width="2.6"/><path d="M-3 -2 v4 M0 -3 v5 M3 -2 v4" stroke="'+INK+'" stroke-width="1.6" stroke-linecap="round"/></g>';
+    }
+  }
+  var bodyRy = tired? 20:23, bodyCy = tired? 104:101;
+  var hair = zee ? '<path d="M28 56 C16 70 20 88 14 102 C12 110 22 112 26 104 C30 94 30 80 36 68 Z M110 56 C122 70 118 88 124 102 C126 110 116 112 112 104 C108 94 108 80 102 68 Z" fill="#7A5240" stroke="'+INK+'" stroke-width="2.6" stroke-linejoin="round"/>' : '';
+  var helmet = zee
+    ? '<path d="M23 60 C16 8 122 8 115 60 C96 48 42 48 23 60 Z" fill="#4F78C4" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/>'+
+      '<path d="M69 22 C72 30 73 40 72.5 49" fill="none" stroke="#F3F6FF" stroke-width="7" stroke-linecap="round"/>'+
+      '<path d="M38 34 C44 26 52 23 58 22" fill="none" stroke="#fff" stroke-width="4.5" stroke-linecap="round" opacity=".45"/>'+
+      '<g transform="translate(101 36)"><circle r="4.4" cx="0" cy="-5" fill="#F7B8C6"/><circle r="4.4" cx="4.8" cy="-1.4" fill="#F7B8C6"/><circle r="4.4" cx="3" cy="4.2" fill="#F7B8C6"/><circle r="4.4" cx="-3" cy="4.2" fill="#F7B8C6"/><circle r="4.4" cx="-4.8" cy="-1.4" fill="#F7B8C6"/><circle r="2.8" fill="#FBE7B5"/></g>'
+    : '<path d="M23 60 C16 8 122 8 115 60 C96 48 42 48 23 60 Z" fill="#5B565A" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/>'+
+      '<path d="M38 34 C44 26 52 23 58 22" fill="none" stroke="#fff" stroke-width="4.5" stroke-linecap="round" opacity=".4"/>'+
+      '<path d="M90 30 c0 -4.4 6.4 -4.4 6.4 0 c0 -4.4 6.4 -4.4 6.4 0 c0 5.4 -6.4 8.8 -6.4 8.8 c0 0 -6.4 -3.4 -6.4 -8.8z" fill="#F4B6C2"/>';
+  if(tired) helmet='<g transform="rotate(-7 69 40)">'+helmet+'</g>';
+  var body = zee ? '#86CC94' : '#3A3337';
+  return '<svg viewBox="0 0 140 132" xmlns="http://www.w3.org/2000/svg" role="img">'+
+    '<ellipse cx="69" cy="127" rx="42" ry="5" fill="'+INK+'" opacity=".08"/>'+
+    // shell peeking out behind
+    '<ellipse cx="69" cy="'+(bodyCy-2)+'" rx="40" ry="'+(bodyRy+4)+'" fill="#B98C58" stroke="'+INK+'" stroke-width="3"/>'+
+    hair+
+    // arms
+    '<ellipse cx="34" cy="'+(bodyCy+2)+'" rx="7" ry="11" fill="'+G+'" stroke="'+INK+'" stroke-width="2.6" transform="rotate(18 34 '+(bodyCy+2)+')"/>'+
+    '<ellipse cx="104" cy="'+(bodyCy+2)+'" rx="7" ry="11" fill="'+G+'" stroke="'+INK+'" stroke-width="2.6" transform="rotate(-18 104 '+(bodyCy+2)+')"/>'+
+    // body (Zee: green with belly plate; Alex: black hoodie)
+    '<ellipse cx="69" cy="'+bodyCy+'" rx="32" ry="'+bodyRy+'" fill="'+body+'" stroke="'+INK+'" stroke-width="3"/>'+
+    (zee ? '<ellipse cx="69" cy="'+(bodyCy+4)+'" rx="18" ry="'+(bodyRy-6)+'" fill="#FBEFD0" stroke="'+INK+'" stroke-width="2"/><path d="M55 '+(bodyCy+1)+' h28 M56 '+(bodyCy+8)+' h26" stroke="#E2C99A" stroke-width="1.8" stroke-linecap="round"/>'
+         : '<path d="M60 '+(bodyCy-14)+' L62 '+(bodyCy-2)+' M78 '+(bodyCy-14)+' L76 '+(bodyCy-2)+'" stroke="#8B8388" stroke-width="2" stroke-linecap="round"/>')+
+    // webbed feet
+    '<path d="M43 121 C43 114 64 113 65 120 L62 125 L58 122 L54 126 L50 122 L46 125 Z" fill="'+G+'" stroke="'+INK+'" stroke-width="2.4" stroke-linejoin="round"/>'+
+    '<path d="M73 120 C74 113 95 114 95 121 L92 125 L88 122 L84 126 L80 122 L76 125 Z" fill="'+G+'" stroke="'+INK+'" stroke-width="2.4" stroke-linejoin="round"/>'+
+    // head
+    '<ellipse cx="69" cy="64" rx="45" ry="36" fill="'+G+'" stroke="'+INK+'" stroke-width="3"/>'+
+    helmet+
+    '<ellipse cx="38" cy="75" rx="8" ry="5" fill="#F7A8B8" opacity=".9"/><ellipse cx="100" cy="75" rx="8" ry="5" fill="#F7A8B8" opacity=".9"/>'+
+    brows+eyes+beak+extra+
+  '</svg>';
+}
+function cat(happy){return kappaSVG(happy?'happy':'default','alex')}
 
 var KIND={scooter:['pickup','🛵 要你去接'],house:['self','🏠 自己回家'],thought_balloon:['later','💭 晚點再說']};
 function kindOf(it){var tg=it.tags||[];if(tg[0]==='gift')return ['gift','🎁 想兌換獎勵'];if(tg[0]==='scooter'&&tg.indexOf('books')>=0)return ['pickup','📚 下課要你去接'];return KIND[tg[0]]||['later','💌 新訊息']}
@@ -196,6 +249,9 @@ function render(){
   if(!A.code){$('#pairCard').hidden=false;$('#main').hidden=true;return}
   $('#pairCard').hidden=true;$('#main').hidden=false;
   var items=A.items.slice().sort(function(a,b){return b.time-a.time});
+  var sn=null;items.some(function(it){var m=(it.tags||[]).join(' ').match(/(?:^| )stamps-(\d+)/);if(m){sn=Math.min(10,+m[1]);return true}return false});
+  if(sn!==null){if(A.stamps!==sn){A.stamps=sn;save()}}else if(typeof A.stamps==='number')sn=A.stamps;
+  var SP=$('#stampsA');if(sn===null){SP.hidden=true}else{SP.hidden=false;SP.textContent='🐾 '+sn+'/10'+(sn>=10?' 集滿了！':'');SP.setAttribute('aria-label','Zee 的接送集點卡：'+sn+' / 10 點')}
   var top=items[0], L=$('#latest');
   if(top&&sameDay(top.time,Date.now())){
     var k=kindOf(top);

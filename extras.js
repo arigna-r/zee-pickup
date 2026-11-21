@@ -19,7 +19,7 @@
   var st = document.createElement('style');
   st.textContent = [
     '.hero{cursor:pointer;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;border-radius:24px}',
-    '.hero.pat svg,.mascot.pat svg{animation:zpat .45s var(--ease)}',
+    '.hero.pat svg,.hero.pat img,.mascot.pat svg{animation:zpat .45s var(--ease)}',
     '@keyframes zpat{0%{transform:scale(1)}40%{transform:scale(1.045,.95)}100%{transform:scale(1)}}',
     '.mascot{position:relative;cursor:pointer;-webkit-user-select:none;user-select:none}',
     '.fh{position:absolute;pointer-events:none;font-size:22px;line-height:1;color:#E58A9E;z-index:3;animation:zfh 1.15s ease-out forwards}',
@@ -76,7 +76,7 @@
   }
 
   /* ---------- pet the cat ---------- */
-  var PURR = ['呼嚕呼嚕～', '喵 ♡', '再摸一下下', '好舒服～', '最喜歡妳了'];
+  var PURR = ['抱緊一點喔 ♡', '出發囉～ 🛵', '再戳一下下', '今天也載妳回家', '最喜歡妳了'];
   function pat(box, xPct, yPct) {
     box.classList.remove('pat'); void box.offsetWidth; box.classList.add('pat');
     floatHearts(box, 4, xPct, yPct);
@@ -91,7 +91,7 @@
     if (!box || box.dataset.pet) return;
     box.dataset.pet = '1';
     box.removeAttribute('aria-hidden');
-    box.setAttribute('role', 'button'); box.setAttribute('tabindex', '0'); box.setAttribute('aria-label', '摸摸小貓');
+    box.setAttribute('role', 'button'); box.setAttribute('tabindex', '0'); box.setAttribute('aria-label', '戳一下，送妳愛心');
     box.addEventListener('click', function () { pat(box, xPct, yPct); });
     box.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pat(box, xPct, yPct); } });
   }
@@ -230,7 +230,7 @@
       var t = await K.topics();
       var r = await fetch(K.NTFY + '/', { method: 'POST', body: JSON.stringify({
         topic: t.ans, title: 'Zee 集滿點數了！🎁', message: '接送集點卡集滿 10 點了～想跟你換：' + reward + ' ♡',
-        tags: ['gift'], priority: 4, click: new URL('alex.html', location.href).href }) });
+        tags: ['gift', 'stamps-' + Math.min(X.next.length, 10)], priority: 4, click: new URL('alex.html', location.href).href }) });
       if (!r.ok) throw new Error('http ' + r.status);
       X.rewards.push({ date: today(), reward: reward }); X.cards++;
       X.stamps = X.next.slice(0, 10); X.next = []; picked = null; saveX();
@@ -240,6 +240,11 @@
     } catch (e) {
       stEl.textContent = '沒送出去，網路好像不太穩，等一下再試試看～'; btn.disabled = false;
     }
+  }
+  function stampCount(choice) {
+    var d = today(), n = X.stamps.length;
+    if (choice === 'pickup' && n < 10 && X.stamps.indexOf(d) < 0 && X.next.indexOf(d) < 0) n++;
+    return n;
   }
   function delivered(fromSend) {
     var S = Z.state();
@@ -303,6 +308,6 @@
   window.addEventListener('online', pollNotes);
   setInterval(function () { if (!document.hidden && Z.state().screen === 'welcome') pollNotes(); }, 60000);
 
-  window.__zeeExtras = { welcome: welcome, delivered: delivered, pollNotes: pollNotes, burst: burst, state: function () { return X; }, moodFor: moodFor };
+  window.__zeeExtras = { stampCount: stampCount, welcome: welcome, delivered: delivered, pollNotes: pollNotes, burst: burst, state: function () { return X; }, moodFor: moodFor };
   welcome(); pollNotes();
 })();

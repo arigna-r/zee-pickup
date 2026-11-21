@@ -1,7 +1,7 @@
 /* Zee 的下班接送站 — offline service worker
    Cache-first for the app shell, refreshed quietly in the background
    so a newer version shows up on the next launch. */
-const VERSION = 'zee-pickup-v1.4.1';
+const VERSION = 'zee-pickup-v1.5.0';
 const ASSETS = [
   './',
   './index.html',
@@ -10,7 +10,7 @@ const ASSETS = [
   './alex.html',
   './alex.webmanifest',
   './manifest.webmanifest',
-  './favicon.svg',
+  './ride.webp', './favicon.svg',
   './apple-touch-icon.png',
   './icon-192.png',
   './icon-512.png',

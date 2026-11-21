@@ -44,7 +44,7 @@
     return {
       title: (isUpdate ? 'Zee 更新了：' : 'Zee：') + (cls ? '下課後想請你來接我 ♡' : h[1]),
       message: msg,
-      tags: cls ? [h[0], 'books'] : [h[0]],
+      tags: (cls ? [h[0], 'books'] : [h[0]]).concat(window.__zeeExtras && window.__zeeExtras.stampCount ? ['stamps-' + window.__zeeExtras.stampCount(S.choice)] : []),
       priority: S.choice === 'pickup' ? 4 : 3,
       click: new URL('alex.html', location.href).href
     };

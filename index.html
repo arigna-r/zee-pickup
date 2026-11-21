@@ -71,6 +71,7 @@ button{cursor:pointer;touch-action:manipulation}
 /* welcome */
 .hero{position:relative;margin:4px auto 0;width:100%;max-width:320px}
 .hero svg{display:block;width:100%;height:auto;overflow:visible}
+.hero-img{display:block;width:100%;height:auto;aspect-ratio:3/2;border-radius:24px;background:#2a2630;box-shadow:0 2px 4px rgba(74,58,63,.06),0 16px 34px -16px rgba(74,40,60,.55);-webkit-user-drag:none}
 .bob{animation:bob 3.2s ease-in-out infinite;transform-origin:50% 100%}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
 .wheel{animation:spin 1.6s linear infinite;transform-box:fill-box;transform-origin:center}
@@ -175,6 +176,13 @@ button{cursor:pointer;touch-action:manipulation}
 .energy-opt .check{margin-left:auto;width:24px;height:24px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;font-size:14px;color:transparent}
 .energy-opt[aria-pressed="true"] .check{background:var(--blush-deep);border-color:var(--blush-deep);color:#fff}
 
+/* ride photo */
+.ride-photo{margin:18px auto 4px;width:88%;max-width:360px;background:#fff;padding:9px 9px 8px;border-radius:10px;box-shadow:0 2px 4px rgba(74,58,63,.06),0 14px 30px -14px rgba(122,88,96,.5);transform:rotate(-2.2deg);position:relative}
+.ride-photo::before{content:"";position:absolute;top:-10px;left:50%;width:74px;height:20px;margin-left:-37px;background:rgba(244,182,194,.75);border-radius:3px;transform:rotate(3deg)}
+.ride-photo img{display:block;width:100%;height:auto;border-radius:6px;background:#2a2630}
+.ride-photo figcaption{text-align:center;font-size:14px;color:var(--ink-soft);padding:8px 0 1px}
+@media (prefers-reduced-motion:no-preference){.ride-photo:not([hidden]){animation:ridePop .5s cubic-bezier(.2,.9,.3,1.3) both .15s}}
+@keyframes ridePop{from{opacity:0;transform:rotate(-6deg) translateY(10px) scale(.94)}to{opacity:1;transform:rotate(-2.2deg)}}
 /* ticket */
 .ticket-wrap{padding:4px 0 2px}
 .ticket{position:relative;background:var(--card);border-radius:26px;box-shadow:0 2px 4px rgba(74,58,63,.05),0 18px 40px -18px rgba(122,88,96,.45);overflow:hidden}
@@ -187,6 +195,8 @@ button{cursor:pointer;touch-action:manipulation}
 .tk-hero{display:flex;align-items:center;gap:12px;margin-top:10px}
 .tk-art{flex:none;width:118px}
 .tk-art.cat{width:96px}
+.tk-art.photo{width:108px;height:108px;border-radius:22px;overflow:hidden;background:#2a2630;box-shadow:0 8px 18px -10px rgba(74,40,60,.6)}
+.tk-art.photo img{display:block;width:100%;height:100%;object-fit:cover;object-position:44% 40%;transform:scale(1.25);transform-origin:44% 40%}
 .tk-art svg{display:block;width:100%;height:auto;overflow:visible}
 .tk-headline{margin:0;font-size:22px;line-height:1.35;font-weight:800;letter-spacing:.02em}
 .tk-sub{margin:4px 0 0;font-size:14.5px;color:var(--ink-soft)}
@@ -373,6 +383,7 @@ button{cursor:pointer;touch-action:manipulation}
     </div>
     <h1 class="sr-only" id="summary-title" tabindex="-1">今日下班小卡</h1>
     <div class="ticket-wrap"><article class="ticket" id="ticket" aria-label="今日下班小卡"></article></div>
+    <figure class="ride-photo" id="ridePhoto" hidden><img src="ride.webp" width="600" height="400" alt="插畫：Alex 騎著黑色機車載 Zee 回家，背景是台北的夜景" decoding="async"><figcaption>今天換我載妳回家 🛵♡</figcaption></figure>
 
     <p class="msg-label" id="msgLabel">要傳給 Alex 的話</p>
     <p class="msg" id="msgPreview" aria-labelledby="msgLabel"></p>
@@ -414,7 +425,7 @@ button{cursor:pointer;touch-action:manipulation}
     <h3>✈️ 沒網路的時候</h3>
     <p>第一次在有網路時打開後，就算沒網路，也能打開、選擇、做小卡和複製。傳給 Alex 需要網路；沒網路時按下傳送，會等連上線再自動送出。</p>
     <h3>🐾 集點卡和小紙條</h3>
-    <p>每次請 Alex 來接都會蓋一個章，集滿 10 個可以換小獎勵。Alex 寫的小紙條，會在當天出現在首頁。小貓也可以摸摸看喔。</p>
+    <p>每次請 Alex 來接都會蓋一個章，集滿 10 個可以換小獎勵。Alex 寫的小紙條，會在當天出現在首頁。首頁的圖也可以戳戳看喔。</p>
     <h3>☀️ 新的一天</h3>
     <p>每天會自動清空當天的選擇（像是下班時間），不會不小心用到昨天的。之前填過的地點會留著，方便下次點選。</p>
     <button class="btn ghost" type="button" id="clearToday">清空今天的選擇</button>
@@ -505,57 +516,68 @@ function checkDay(){
 /* ---------- illustrations (original, inline SVG) ---------- */
 var uid=0;
 var INK='#4A3A3F';
-function catSVG(mood){
-  var id='cc'+(++uid);
+function kappaSVG(mood,who){
   mood=mood||'default';
-  var tired=mood==='low';
-  var earL='<path d="M27 54 C20 32 24 12 35 11 C45 11 56 24 62 33 Z" fill="#FFFDF8" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/><path d="M33 42 C30 30 32 21 37 21 C42 22 48 28 51 33 Z" fill="#F7C3CD"/>';
-  var earR='<path d="M111 54 C118 32 114 12 103 11 C93 11 82 24 76 33 Z" fill="#FFFDF8" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/><path d="M105 42 C108 30 106 21 101 21 C96 22 90 28 87 33 Z" fill="#F7C3CD"/>';
-  var ears = tired ? '<g transform="rotate(-24 42 44)">'+earL+'</g><g transform="rotate(24 96 44)">'+earR+'</g>' : earL+earR;
-  var eyes, mouth, extra='', brows='';
+  var G='#86CC94', zee=who!=='alex', tired=mood==='low';
+  var eyes, beak, extra='', brows='';
+  var beakBase='<path d="M57 77 C57 70 81 70 81 77 C81 86 57 86 57 77 Z" fill="#F6C25C" stroke="'+INK+'" stroke-width="2.6" stroke-linejoin="round"/><path d="M61 74.4 q5 -2 10 -1" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" opacity=".8"/>';
   if(mood==='low'){
-    eyes='<path d="M45 62 Q53 67 61 62" fill="none" stroke="'+INK+'" stroke-width="3.2" stroke-linecap="round"/><path d="M77 62 Q85 67 93 62" fill="none" stroke="'+INK+'" stroke-width="3.2" stroke-linecap="round"/>';
-    mouth='<path d="M64 75 Q66.5 72.5 69 75 Q71.5 77.5 74 75" fill="none" stroke="'+INK+'" stroke-width="2.6" stroke-linecap="round"/>';
-    extra='<path d="M116 38 C116 38 110 46 110 50 a6 6 0 0 0 12 0 C122 46 116 38 116 38Z" fill="#CFE6F5" stroke="'+INK+'" stroke-width="2"/>'+
-          '<text x="120" y="20" font-size="15" font-weight="700" fill="#9A88D2" font-family="ui-rounded,system-ui">z</text><text x="130" y="8" font-size="11" font-weight="700" fill="#C9B8E8" font-family="ui-rounded,system-ui">z</text>';
-  }else if(mood==='high'){
-    eyes='<path d="M45 64 Q53 54 61 64" fill="none" stroke="'+INK+'" stroke-width="3.4" stroke-linecap="round"/><path d="M77 64 Q85 54 93 64" fill="none" stroke="'+INK+'" stroke-width="3.4" stroke-linecap="round"/>';
-    mouth='<path d="M63 71 Q69 70 75 71 Q74 81 69 81 Q64 81 63 71Z" fill="#E58A9E" stroke="'+INK+'" stroke-width="2.4" stroke-linejoin="round"/>';
-    extra='<path d="M12 30 l3 7 7 3 -7 3 -3 7 -3 -7 -7 -3 7 -3z" fill="#FBE7B5" stroke="'+INK+'" stroke-width="1.6" stroke-linejoin="round"/>'+
-          '<path d="M124 20 l2.4 5.6 5.6 2.4 -5.6 2.4 -2.4 5.6 -2.4 -5.6 -5.6 -2.4 5.6 -2.4z" fill="#CDBDEB" stroke="'+INK+'" stroke-width="1.5" stroke-linejoin="round"/>'+
-          '<path d="M126 58 c0 -4 6 -4 6 0 c0 -4 6 -4 6 0 c0 5 -6 8 -6 8 c0 0 -6 -3 -6 -8z" fill="#F4B6C2" stroke="'+INK+'" stroke-width="1.5"/>';
+    eyes='<path d="M45 63 Q53 68 61 63" fill="none" stroke="'+INK+'" stroke-width="3.2" stroke-linecap="round"/><path d="M77 63 Q85 68 93 63" fill="none" stroke="'+INK+'" stroke-width="3.2" stroke-linecap="round"/>';
+    beak=beakBase+'<path d="M61 79 Q64.5 76.5 68 79 Q71.5 81.5 75 79" fill="none" stroke="'+INK+'" stroke-width="2" stroke-linecap="round"/>';
+    extra='<path d="M118 42 C118 42 112 50 112 54 a6 6 0 0 0 12 0 C124 50 118 42 118 42Z" fill="#CFE6F5" stroke="'+INK+'" stroke-width="2"/>'+
+          '<text x="120" y="22" font-size="15" font-weight="700" fill="#9A88D2" font-family="ui-rounded,system-ui">z</text><text x="130" y="10" font-size="11" font-weight="700" fill="#C9B8E8" font-family="ui-rounded,system-ui">z</text>';
+  }else if(mood==='high'||mood==='happy'){
+    eyes='<path d="M45 65 Q53 55 61 65" fill="none" stroke="'+INK+'" stroke-width="3.4" stroke-linecap="round"/><path d="M77 65 Q85 55 93 65" fill="none" stroke="'+INK+'" stroke-width="3.4" stroke-linecap="round"/>';
+    beak='<path d="M57 75 C57 69 81 69 81 75 L79 77 L59 77 Z" fill="#F6C25C" stroke="'+INK+'" stroke-width="2.6" stroke-linejoin="round"/>'+
+         '<path d="M60 79 L78 79 C77 88 61 88 60 79 Z" fill="#F6C25C" stroke="'+INK+'" stroke-width="2.6" stroke-linejoin="round"/>'+
+         '<path d="M61 77 L77 77 L77 79.5 L61 79.5 Z" fill="#E77E92"/>';
+    if(mood==='high') extra='<path d="M12 34 l3 7 7 3 -7 3 -3 7 -3 -7 -7 -3 7 -3z" fill="#FBE7B5" stroke="'+INK+'" stroke-width="1.6" stroke-linejoin="round"/>'+
+          '<path d="M124 24 l2.4 5.6 5.6 2.4 -5.6 2.4 -2.4 5.6 -2.4 -5.6 -5.6 -2.4 5.6 -2.4z" fill="#CDBDEB" stroke="'+INK+'" stroke-width="1.5" stroke-linejoin="round"/>'+
+          '<path d="M122 60 c0 -4 6 -4 6 0 c0 -4 6 -4 6 0 c0 5 -6 8 -6 8 c0 0 -6 -3 -6 -8z" fill="#F4B6C2" stroke="'+INK+'" stroke-width="1.5"/>';
   }else{
-    eyes='<ellipse cx="53" cy="61" rx="5.6" ry="6.8" fill="'+INK+'"/><ellipse cx="85" cy="61" rx="5.6" ry="6.8" fill="'+INK+'"/>'+
-         '<circle cx="55" cy="58.4" r="2.2" fill="#fff"/><circle cx="87" cy="58.4" r="2.2" fill="#fff"/><circle cx="51.4" cy="64" r="1" fill="#fff"/><circle cx="83.4" cy="64" r="1" fill="#fff"/>';
-    mouth='<path d="M65 72 l4 2.6 l4 -2.6" fill="#F4B6C2" stroke="none"/><path d="M63 74 Q66 78 69 74.5 Q72 78 75 74" fill="none" stroke="'+INK+'" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>';
+    eyes='<ellipse cx="53" cy="62" rx="5.6" ry="6.8" fill="'+INK+'"/><ellipse cx="85" cy="62" rx="5.6" ry="6.8" fill="'+INK+'"/>'+
+         '<circle cx="55" cy="59.4" r="2.2" fill="#fff"/><circle cx="87" cy="59.4" r="2.2" fill="#fff"/><circle cx="51.4" cy="65" r="1" fill="#fff"/><circle cx="83.4" cy="65" r="1" fill="#fff"/>';
+    beak=beakBase+'<path d="M61 78 Q69 83 77 78" fill="none" stroke="'+INK+'" stroke-width="2" stroke-linecap="round"/>';
     if(mood==='mid'){
-      brows='<path d="M45 50 L58 53 M93 50 L80 53" stroke="'+INK+'" stroke-width="2.6" stroke-linecap="round"/>';
-      extra='<g transform="translate(116 74)"><circle r="9" fill="#FFFDF8" stroke="'+INK+'" stroke-width="2.6"/><path d="M-3 -2 v4 M0 -3 v5 M3 -2 v4" stroke="'+INK+'" stroke-width="1.6" stroke-linecap="round"/></g>';
+      brows='<path d="M46 52 L58 54.5 M92 52 L80 54.5" stroke="'+INK+'" stroke-width="2.6" stroke-linecap="round"/>';
+      extra='<g transform="translate(118 76)"><circle r="9" fill="#FFFDF8" stroke="'+INK+'" stroke-width="2.6"/><path d="M-3 -2 v4 M0 -3 v5 M3 -2 v4" stroke="'+INK+'" stroke-width="1.6" stroke-linecap="round"/></g>';
     }
   }
   var bodyRy = tired? 20:23, bodyCy = tired? 104:101;
+  var hair = zee ? '<path d="M28 56 C16 70 20 88 14 102 C12 110 22 112 26 104 C30 94 30 80 36 68 Z M110 56 C122 70 118 88 124 102 C126 110 116 112 112 104 C108 94 108 80 102 68 Z" fill="#7A5240" stroke="'+INK+'" stroke-width="2.6" stroke-linejoin="round"/>' : '';
+  var helmet = zee
+    ? '<path d="M23 60 C16 8 122 8 115 60 C96 48 42 48 23 60 Z" fill="#4F78C4" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/>'+
+      '<path d="M69 22 C72 30 73 40 72.5 49" fill="none" stroke="#F3F6FF" stroke-width="7" stroke-linecap="round"/>'+
+      '<path d="M38 34 C44 26 52 23 58 22" fill="none" stroke="#fff" stroke-width="4.5" stroke-linecap="round" opacity=".45"/>'+
+      '<g transform="translate(101 36)"><circle r="4.4" cx="0" cy="-5" fill="#F7B8C6"/><circle r="4.4" cx="4.8" cy="-1.4" fill="#F7B8C6"/><circle r="4.4" cx="3" cy="4.2" fill="#F7B8C6"/><circle r="4.4" cx="-3" cy="4.2" fill="#F7B8C6"/><circle r="4.4" cx="-4.8" cy="-1.4" fill="#F7B8C6"/><circle r="2.8" fill="#FBE7B5"/></g>'
+    : '<path d="M23 60 C16 8 122 8 115 60 C96 48 42 48 23 60 Z" fill="#5B565A" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/>'+
+      '<path d="M38 34 C44 26 52 23 58 22" fill="none" stroke="#fff" stroke-width="4.5" stroke-linecap="round" opacity=".4"/>'+
+      '<path d="M90 30 c0 -4.4 6.4 -4.4 6.4 0 c0 -4.4 6.4 -4.4 6.4 0 c0 5.4 -6.4 8.8 -6.4 8.8 c0 0 -6.4 -3.4 -6.4 -8.8z" fill="#F4B6C2"/>';
+  if(tired) helmet='<g transform="rotate(-7 69 40)">'+helmet+'</g>';
+  var body = zee ? '#86CC94' : '#3A3337';
   return '<svg viewBox="0 0 140 132" xmlns="http://www.w3.org/2000/svg" role="img">'+
-    '<defs><clipPath id="'+id+'"><ellipse cx="69" cy="62" rx="45" ry="37"/></clipPath></defs>'+
     '<ellipse cx="69" cy="127" rx="42" ry="5" fill="'+INK+'" opacity=".08"/>'+
-    '<path d="M101 113 C127 115 131 90 118 80" fill="none" stroke="'+INK+'" stroke-width="12" stroke-linecap="round"/>'+
-    '<path d="M101 113 C127 115 131 90 118 80" fill="none" stroke="#FFFDF8" stroke-width="6.5" stroke-linecap="round"/>'+
-    '<path d="M113 74 c0 -5 7 -5 7 0 c0 -5 7 -5 7 0 c0 6 -7 9 -7 9 c0 0 -7 -3 -7 -9z" fill="#F4B6C2" stroke="'+INK+'" stroke-width="2" transform="rotate(20 120 78)"/>'+
-    '<ellipse cx="69" cy="'+bodyCy+'" rx="34" ry="'+bodyRy+'" fill="#FFFDF8" stroke="'+INK+'" stroke-width="3"/>'+
-    '<ellipse cx="54" cy="121" rx="10.5" ry="6.5" fill="#FFFDF8" stroke="'+INK+'" stroke-width="2.6"/><ellipse cx="84" cy="121" rx="10.5" ry="6.5" fill="#FFFDF8" stroke="'+INK+'" stroke-width="2.6"/>'+
-    '<circle cx="50" cy="121.5" r="1.6" fill="#F4B6C2"/><circle cx="54" cy="119.5" r="1.6" fill="#F4B6C2"/><circle cx="58" cy="121.5" r="1.6" fill="#F4B6C2"/>'+
-    '<circle cx="80" cy="121.5" r="1.6" fill="#F4B6C2"/><circle cx="84" cy="119.5" r="1.6" fill="#F4B6C2"/><circle cx="88" cy="121.5" r="1.6" fill="#F4B6C2"/>'+
-    ears+
-    '<ellipse cx="69" cy="62" rx="45" ry="37" fill="#FFFDF8"/>'+
-    '<g clip-path="url(#'+id+')"><ellipse cx="104" cy="32" rx="27" ry="21" fill="#F6D2B8"/></g>'+
-    '<ellipse cx="69" cy="62" rx="45" ry="37" fill="none" stroke="'+INK+'" stroke-width="3"/>'+
-    '<path d="M37 93 Q69 106 101 93 L99 101 Q69 113 39 101Z" fill="#E58A9E" stroke="'+INK+'" stroke-width="2.6" stroke-linejoin="round"/>'+
-    '<path d="M55 102 L49 115 L61 109Z" fill="#E58A9E" stroke="'+INK+'" stroke-width="2.4" stroke-linejoin="round"/>'+
-    '<circle cx="80" cy="104" r="3" fill="#FBE7B5" stroke="'+INK+'" stroke-width="1.6"/>'+
-    '<ellipse cx="40" cy="73" rx="9" ry="5.5" fill="#F7A8B8" opacity=".85"/><ellipse cx="98" cy="73" rx="9" ry="5.5" fill="#F7A8B8" opacity=".85"/>'+
-    '<path d="M21 66 L10 63 M21 71 L10 73 M117 66 L128 63 M117 71 L128 73" stroke="'+INK+'" stroke-width="2" stroke-linecap="round" opacity=".5"/>'+
-    brows+eyes+mouth+extra+
+    // shell peeking out behind
+    '<ellipse cx="69" cy="'+(bodyCy-2)+'" rx="40" ry="'+(bodyRy+4)+'" fill="#B98C58" stroke="'+INK+'" stroke-width="3"/>'+
+    hair+
+    // arms
+    '<ellipse cx="34" cy="'+(bodyCy+2)+'" rx="7" ry="11" fill="'+G+'" stroke="'+INK+'" stroke-width="2.6" transform="rotate(18 34 '+(bodyCy+2)+')"/>'+
+    '<ellipse cx="104" cy="'+(bodyCy+2)+'" rx="7" ry="11" fill="'+G+'" stroke="'+INK+'" stroke-width="2.6" transform="rotate(-18 104 '+(bodyCy+2)+')"/>'+
+    // body (Zee: green with belly plate; Alex: black hoodie)
+    '<ellipse cx="69" cy="'+bodyCy+'" rx="32" ry="'+bodyRy+'" fill="'+body+'" stroke="'+INK+'" stroke-width="3"/>'+
+    (zee ? '<ellipse cx="69" cy="'+(bodyCy+4)+'" rx="18" ry="'+(bodyRy-6)+'" fill="#FBEFD0" stroke="'+INK+'" stroke-width="2"/><path d="M55 '+(bodyCy+1)+' h28 M56 '+(bodyCy+8)+' h26" stroke="#E2C99A" stroke-width="1.8" stroke-linecap="round"/>'
+         : '<path d="M60 '+(bodyCy-14)+' L62 '+(bodyCy-2)+' M78 '+(bodyCy-14)+' L76 '+(bodyCy-2)+'" stroke="#8B8388" stroke-width="2" stroke-linecap="round"/>')+
+    // webbed feet
+    '<path d="M43 121 C43 114 64 113 65 120 L62 125 L58 122 L54 126 L50 122 L46 125 Z" fill="'+G+'" stroke="'+INK+'" stroke-width="2.4" stroke-linejoin="round"/>'+
+    '<path d="M73 120 C74 113 95 114 95 121 L92 125 L88 122 L84 126 L80 122 L76 125 Z" fill="'+G+'" stroke="'+INK+'" stroke-width="2.4" stroke-linejoin="round"/>'+
+    // head
+    '<ellipse cx="69" cy="64" rx="45" ry="36" fill="'+G+'" stroke="'+INK+'" stroke-width="3"/>'+
+    helmet+
+    '<ellipse cx="38" cy="75" rx="8" ry="5" fill="#F7A8B8" opacity=".9"/><ellipse cx="100" cy="75" rx="8" ry="5" fill="#F7A8B8" opacity=".9"/>'+
+    brows+eyes+beak+extra+
   '</svg>';
 }
+function catSVG(mood){return kappaSVG(mood,"zee")}
 function heroSVG(opts){
   opts=opts||{};
   var anim=opts.animate!==false;
@@ -592,35 +614,66 @@ function heroSVG(opts){
     // seat
     '<path d="M64 102 C64 91 71 86 83 86 L133 86 C143 86 148 92 148 102 Z" fill="#F4B6C2" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/>'+
     '<path d="M76 93 L136 93" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-dasharray="3 5" opacity=".8"/>'+
-    // cat: tail, body, arm
-    '<path d="M92 88 C72 92 64 76 72 64" fill="none" stroke="'+INK+'" stroke-width="12" stroke-linecap="round"/>'+
-    '<path d="M92 88 C72 92 64 76 72 64" fill="none" stroke="#FFFDF8" stroke-width="6.5" stroke-linecap="round"/>'+
-    '<ellipse cx="110" cy="80" rx="23" ry="17" fill="#FFFDF8" stroke="'+INK+'" stroke-width="3"/>'+
-    '<path d="M124 76 L185 61" stroke="'+INK+'" stroke-width="12" stroke-linecap="round"/>'+
-    '<path d="M124 76 L185 61" stroke="#FFFDF8" stroke-width="6.5" stroke-linecap="round"/>'+
-    // handlebar + grip + paw
+    // ---- riders: a 河童 couple — Zee behind, Alex driving ----
+    // kappa long brown hair (Zee) + shell
+    '<path d="M64 48 C54 56 56 66 52 76 C50 82 56 86 60 82 C62 76 66 70 66 60 Z" fill="#7A5240" stroke="'+INK+'" stroke-width="2.6" stroke-linejoin="round"/>'+
+    '<ellipse cx="71" cy="80" rx="13" ry="17" fill="#B98C58" stroke="'+INK+'" stroke-width="3"/>'+
+    '<ellipse cx="71" cy="80" rx="9" ry="12.5" fill="#D8B27A"/>'+
+    '<path d="M67 70 L75 70 L78 77 L75 84 L67 84 L64 77 Z" fill="none" stroke="#9A7046" stroke-width="1.6" stroke-linejoin="round"/>'+
+    '<path d="M67 70 L64 64 M75 70 L78 64 M78 77 L83 77 M64 77 L60 77 M67 84 L64 91 M75 84 L78 91" stroke="#9A7046" stroke-width="1.6" stroke-linecap="round"/>'+
+    // kappa leg + webbed foot
+    '<path d="M94 92 C97 100 99 105 104 109" fill="none" stroke="'+INK+'" stroke-width="10" stroke-linecap="round"/><path d="M94 92 C97 100 99 105 104 109" fill="none" stroke="#86CC94" stroke-width="5" stroke-linecap="round"/>'+
+    '<path d="M100 108 C102 104 112 104 114 108 L112 113 L109 110 L107 114 L104 110 L101 113 Z" fill="#86CC94" stroke="'+INK+'" stroke-width="2.2" stroke-linejoin="round"/>'+
+    // kappa body + belly plate
+    '<ellipse cx="89" cy="80" rx="17" ry="15" fill="#86CC94" stroke="'+INK+'" stroke-width="3"/>'+
+    '<ellipse cx="92" cy="83" rx="9" ry="9.5" fill="#FBEFD0" stroke="'+INK+'" stroke-width="1.8"/>'+
+    '<path d="M84 80 h16 M84.5 85.5 h15" stroke="#E2C99A" stroke-width="1.6" stroke-linecap="round"/>'+
+    // Alex kappa: leg + webbed foot
+    '<path d="M128 90 C140 98 152 112 162 124" fill="none" stroke="'+INK+'" stroke-width="13" stroke-linecap="round"/><path d="M128 90 C140 98 152 112 162 124" fill="none" stroke="#3A3337" stroke-width="8" stroke-linecap="round"/>'+
+    '<path d="M155 128 C154 119 170 117 176 125 L174 129 L170 126 L167 130 L163 127 L159 130 Z" fill="#86CC94" stroke="'+INK+'" stroke-width="2.4" stroke-linejoin="round"/>'+
+    // Alex body (black hoodie) + shell edge
+    '<ellipse cx="124" cy="78" rx="20" ry="17" fill="#3A3337" stroke="'+INK+'" stroke-width="3"/>'+
+    '<path d="M112 70 C118 66 126 65 132 67" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" opacity=".25"/>'+
+    // kappa hug arm + webbed hand
+    '<path d="M98 76 C108 84 118 86 125 84" fill="none" stroke="'+INK+'" stroke-width="10" stroke-linecap="round"/><path d="M98 76 C108 84 118 86 125 84" fill="none" stroke="#86CC94" stroke-width="5" stroke-linecap="round"/>'+
+    '<path d="M124 79 C130 78 133 81 132 84 C133 87 130 89 127 88 C124 89 122 86 123 84 Z" fill="#86CC94" stroke="'+INK+'" stroke-width="2.2" stroke-linejoin="round"/>'+
+    // Alex arm to handlebar
+    '<path d="M134 72 L183 61" stroke="'+INK+'" stroke-width="12" stroke-linecap="round"/>'+
+    '<path d="M134 72 L183 61" stroke="#3A3337" stroke-width="6.5" stroke-linecap="round"/>'+
+    // handlebar + grip + webbed hand
     '<path d="M178 60 L214 52" stroke="'+INK+'" stroke-width="6" stroke-linecap="round"/>'+
     '<path d="M205 54 L215 51.8" stroke="#E58A9E" stroke-width="7" stroke-linecap="round"/>'+
-    '<circle cx="187" cy="59" r="7.5" fill="#FFFDF8" stroke="'+INK+'" stroke-width="2.6"/>'+
-    '<circle cx="184.5" cy="56.5" r="1.4" fill="#F4B6C2"/><circle cx="188" cy="55.5" r="1.4" fill="#F4B6C2"/><circle cx="190.5" cy="58.5" r="1.4" fill="#F4B6C2"/>'+
-    // head
-    '<ellipse cx="114" cy="50" rx="31" ry="26" fill="#FFFDF8" stroke="'+INK+'" stroke-width="3"/>'+
-    // helmet
-    '<path d="M82 46 C82 12 146 12 146 46 C126 39 102 39 82 46 Z" fill="#5B565A" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/>'+
-    '<path d="M96 24 C104 19 118 18 126 21" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".4"/>'+
-    '<path d="M125 30 c0 -3.2 4.6 -3.2 4.6 0 c0 -3.2 4.6 -3.2 4.6 0 c0 4 -4.6 6.4 -4.6 6.4 c0 0 -4.6 -2.4 -4.6 -6.4z" fill="#F4B6C2"/>'+
-    // ears (rounded, through the helmet)
-    '<path d="M88 34 C84 21 86 9 93 8 C100 8 107 17 110 24 Z" fill="#FFFDF8" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/><path d="M92 27 C91 20 92 15 95 15 C98 15 102 20 103 23Z" fill="#F7C3CD"/>'+
-    '<path d="M140 34 C144 21 142 9 135 8 C128 8 121 17 118 24 Z" fill="#FFFDF8" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/><path d="M136 27 C137 20 136 15 133 15 C130 15 126 20 125 23Z" fill="#F7C3CD"/>'+
-    // face
-    '<ellipse cx="104" cy="56" rx="4.4" ry="5.4" fill="'+INK+'"/><ellipse cx="125" cy="56" rx="4.4" ry="5.4" fill="'+INK+'"/>'+
-    '<circle cx="105.6" cy="53.8" r="1.8" fill="#fff"/><circle cx="126.6" cy="53.8" r="1.8" fill="#fff"/><circle cx="102.8" cy="58.4" r=".8" fill="#fff"/><circle cx="123.8" cy="58.4" r=".8" fill="#fff"/>'+
-    '<ellipse cx="94" cy="64" rx="6.5" ry="4" fill="#F7A8B8" opacity=".9"/><ellipse cx="135" cy="64" rx="6.5" ry="4" fill="#F7A8B8" opacity=".9"/>'+
-    '<path d="M111.6 61.2 l2.9 2 l2.9 -2" fill="#F4B6C2"/>'+
-    '<path d="M110 64 Q112.3 67.4 114.5 64.4 Q116.7 67.4 119 64" fill="none" stroke="'+INK+'" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>'+
-    // scarf
-    '<path d="M91 71 Q114 81 137 71 L136 78 Q114 88 92 78 Z" fill="#E58A9E" stroke="'+INK+'" stroke-width="2.6" stroke-linejoin="round"/>'+
-    '<path d="M94 75 L73 71 L79 85 Z" fill="#E58A9E" stroke="'+INK+'" stroke-width="2.4" stroke-linejoin="round"/>'+
+    '<path d="M181 54 C187 51 194 53 194 58 C196 61 193 65 189 64 C186 67 181 65 181 62 C178 60 178 56 181 54 Z" fill="#86CC94" stroke="'+INK+'" stroke-width="2.4" stroke-linejoin="round"/>'+
+    // kappa head
+    '<ellipse cx="83" cy="54" rx="23" ry="21" fill="#86CC94" stroke="'+INK+'" stroke-width="3"/>'+
+    // Zee: bangs under a blue helmet + flower sticker
+    '<path d="M60 50 C57 33 69 26 83 26 C97 26 108 33 106 50 Q104 43 99 45 Q96 39 91 43 Q88 37 83 41 Q78 37 75 43 Q70 39 67 45 Q62 43 60 50 Z" fill="#7A5240" stroke="'+INK+'" stroke-width="2.6" stroke-linejoin="round"/>'+
+    '<path d="M58 51 C54 15 111 13 108 47 C92 40 73 41 58 51 Z" fill="#4F78C4" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/>'+
+    '<path d="M84.5 26.5 C87.5 31 89 36.5 89 41.5" fill="none" stroke="#F3F6FF" stroke-width="5.5" stroke-linecap="round"/>'+
+    '<path d="M66 27 C70 22 76 20 80 20" fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round" opacity=".45"/>'+
+    '<g transform="translate(101 31)"><circle r="3.4" cx="0" cy="-3.8" fill="#F7B8C6"/><circle r="3.4" cx="3.6" cy="-1" fill="#F7B8C6"/><circle r="3.4" cx="2.2" cy="3.2" fill="#F7B8C6"/><circle r="3.4" cx="-2.2" cy="3.2" fill="#F7B8C6"/><circle r="3.4" cx="-3.6" cy="-1" fill="#F7B8C6"/><circle r="2" fill="#FBE7B5"/></g>'+
+    // kappa face: happy closed eyes, blush, round beak with smile
+    '<path d="M70 56 q4 -4.6 8 0 M88 56 q4 -4.6 8 0" fill="none" stroke="'+INK+'" stroke-width="2.5" stroke-linecap="round"/>'+
+    '<ellipse cx="68" cy="63" rx="5" ry="3.2" fill="#F7A8B8" opacity=".95"/><ellipse cx="98" cy="63" rx="5" ry="3.2" fill="#F7A8B8" opacity=".95"/>'+
+    '<path d="M76 62.5 C76 58 91 58 91 62.5 C91 68.5 76 68.5 76 62.5 Z" fill="#F6C25C" stroke="'+INK+'" stroke-width="2.2" stroke-linejoin="round"/>'+
+    '<path d="M78.5 63 Q83.5 66.5 88.5 63" fill="none" stroke="'+INK+'" stroke-width="1.6" stroke-linecap="round"/>'+
+    '<path d="M79 60.6 q3 -1.4 6 -.6" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round" opacity=".8"/>'+
+    // Alex kappa head
+    '<ellipse cx="133" cy="47" rx="26" ry="23" fill="#86CC94" stroke="'+INK+'" stroke-width="3"/>'+
+    // dark gray helmet
+    '<path d="M105 43 C102 9 163 7 161 39 C144 32 124 33 105 43 Z" fill="#5B565A" stroke="'+INK+'" stroke-width="3" stroke-linejoin="round"/>'+
+    '<path d="M116 20 C124 15 138 14 146 17" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".4"/>'+
+    '<path d="M141 26 c0 -3.2 4.6 -3.2 4.6 0 c0 -3.2 4.6 -3.2 4.6 0 c0 4 -4.6 6.4 -4.6 6.4 c0 0 -4.6 -2.4 -4.6 -6.4z" fill="#F4B6C2"/>'+
+    // Alex face: big shiny eyes, blush, beak with a grin
+    '<ellipse cx="129" cy="54" rx="4.8" ry="5.8" fill="'+INK+'"/><ellipse cx="147" cy="53" rx="4.6" ry="5.6" fill="'+INK+'"/>'+
+    '<circle cx="130.6" cy="51.6" r="2" fill="#fff"/><circle cx="148.5" cy="50.6" r="1.9" fill="#fff"/><circle cx="127.8" cy="56.8" r=".9" fill="#fff"/><circle cx="145.8" cy="55.8" r=".9" fill="#fff"/>'+
+    '<ellipse cx="119" cy="61" rx="5.2" ry="3.3" fill="#F7A8B8" opacity=".95"/><ellipse cx="156" cy="60" rx="4.6" ry="3" fill="#F7A8B8" opacity=".95"/>'+
+    '<path d="M131 63.5 C131 59 147 58.5 148 63 C149 69 131 69.5 131 63.5 Z" fill="#F6C25C" stroke="'+INK+'" stroke-width="2.2" stroke-linejoin="round"/>'+
+    '<path d="M133.5 64 Q139.5 68 145.5 63.5" fill="none" stroke="'+INK+'" stroke-width="1.6" stroke-linecap="round"/>'+
+    '<path d="M134 61.4 q3 -1.4 6 -.7" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round" opacity=".8"/>'+
+    // little hearts between them
+    '<path d="M104 8 c0 -3.6 5 -3.6 5 0 c0 -3.6 5 -3.6 5 0 c0 4.4 -5 7 -5 7 c0 0 -5 -2.6 -5 -7z" fill="#E58A9E" stroke="'+INK+'" stroke-width="1.8" stroke-linejoin="round"/>'+
+    '<path d="M93 13 c0 -2.4 3.4 -2.4 3.4 0 c0 -2.4 3.4 -2.4 3.4 0 c0 3 -3.4 4.7 -3.4 4.7 c0 0 -3.4 -1.7 -3.4 -4.7z" fill="#F4B6C2"/>'+
   '</g></svg>';
 }
 function batterySVG(lvl,col){
@@ -838,7 +891,7 @@ function renderEnergy(changed){
   $('#energyBubble').textContent=ENERGY_BUBBLE[S.choice]||'';
   var cat=$('#energyCat');cat.innerHTML=catSVG(S.energy||'default');
   if(changed){cat.classList.remove('pop');void cat.offsetWidth;cat.classList.add('pop')}
-  $('#moodLine').textContent=S.energy?ENERGY[S.energy].line:'點一下，看看小貓的表情會怎麼變～';
+  $('#moodLine').textContent=S.energy?ENERGY[S.energy].line:'點一下，看看小河童的表情會怎麼變～';
   $$('#energyOpts .energy-opt').forEach(function(b){b.setAttribute('aria-pressed',S.energy===b.dataset.energy?'true':'false')});
   $('#toSummary').textContent=S.energy?'做成今日小卡 ✨':'略過，直接做小卡';
 }
@@ -878,6 +931,7 @@ function canShare(){
 }
 function renderSummary(){
   renderTicket();renderMsg();
+  $('#ridePhoto').hidden=S.choice!=='pickup';
   $('#shareBtn').hidden=!canShare();
   $('#status').textContent='';
   renderOnline();
